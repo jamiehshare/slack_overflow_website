@@ -1,5 +1,5 @@
 theme: "hugo-PaperMod"
-baseURL: slack-overflow-help.netlify
+baseURL: slack-overflow-help.netlify.app
 languageCode: en-gb
 title: Slack Overflow tips & tricks
 params:
@@ -66,9 +66,9 @@ menu:
       url: https://sharecreative.slack.com/archives/C03FEC4C33N
       weight: 40
       
-      
 outputs:
     home:
         - HTML
         - RSS
         - JSON # is necessary
+        
