@@ -1,5 +1,5 @@
 theme: "hugo-PaperMod"
-baseURL: slack-overflow-help.netlify.app
+baseURL: 
 languageCode: en-gb
 title: Slack Overflow tips & tricks
 params:
