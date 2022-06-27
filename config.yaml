@@ -1,5 +1,5 @@
 theme: "hugo-PaperMod"
-baseURL: 
+baseURL: "https://slack-overflow-help.netlify.app/"
 languageCode: en-gb
 title: Slack Overflow tips & tricks
 params:
@@ -71,4 +71,4 @@ outputs:
         - HTML
         - RSS
         - JSON # is necessary
-        
+
