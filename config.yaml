@@ -24,7 +24,7 @@ params:
   label:
     text: "Slack Overflow"
     icon: /logo.png
-    iconHeight: 35  
+    iconHeight: 50 
   
     
   ShowReadingTime: true
@@ -45,8 +45,15 @@ params:
   
   homeInfoParams:
     Title: "Welcome fellow data lovers \U0001F44B"
-    Content: This website acts as a repository for tutorials and documentation that have been spawned from conversation and questions on the #slack_overflow Slack Channel
-    
+    Content:   >
+          This website acts as a repository for tutorials and documentation that have been spawned from conversation and questions on the **\#slack_overflow** Slack Channel.
+          
+          
+          See below for the most recent documentation. 
+          
+          
+          Know what you are looking for? Browse documents based on relevant `R Packages`, Tags, or manually search for the tutorial you are looking for using the buttons above.
+
 menu:
   main:
     - identifier: R_packages
