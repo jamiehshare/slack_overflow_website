@@ -1,0 +1,57 @@
+---
+title: "Issues with fonts"
+author: "Jamie Hudson"
+date: "2022-06-10"
+categories: ["R"]
+tags: ["fonts", "polygon_edge", "errors"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Problem
+
+When trying to plot a visualisation (e.g. bigrams), you are greeted with the following error message:
+
+![Type of error message we may see](img/error_message.png){width=50%}
+
+This is an issue with R being unable to find the appropriate fonts to produce our plot.
+
+## The Solution- reinstall fonts and restart R session.
+
+We need to make sure we have the correct fonts installed on our computers, and also imported into R.
+
+The fonts that we need to make sure we have installed are:  
+- "Neue Haas Grotesk Text Pro 55 Roman"
+- "Neue Haas Grotesk Text Pro 65 Medium"
+- "Neue Haas Grotesk Text Pro 75 Bold".
+
+We can check this by opening up our Font Book application on our Macs. To do this, press ⌘ + space and type "Font Book", and it should appear. We can then double check that these fonts appear:
+
+<center>
+
+![List of fonts as they appear in Font Book](img/font_screenshot.png)
+
+</center>
+
+If we do not have these fonts, they can be downloaded from [enter link here]().
+
+Now, we can run the following code in R to rebook our fonts and make sure all of our system fonts (from Font Book) are imported into R.
+
+```{r, eval=FALSE}
+library(extrafont)
+font_import()
+loadfonts()
+```
+
+Now a quick reboot of R (you can do this by clicking the "Session" from the RStudio menu bar and choosing "Restart R") should enable you to continue plotting to your hearts content.
+
+**N.B. Before restarting R, make sure you save any large datasets (e.g. ldas, explore object) and/or scripts you may be working on! As a recommendation, save the datasets as an `.rds` file using the `readr::write_rds()` function**
+

@@ -1,0 +1,87 @@
+---
+title: "Extracting and filtering for subreddits"
+author: "Jamie Hudson"
+date: "2022-06-10"
+categories: ["R"]
+tags: ["extract", "filtering", "reddit"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=F, message=F}
+library(here)
+library(readr)
+```
+
+## The problem
+
+Sometimes we might received data from a social listening ouput and we want to be able to filter for subreddits of interest.
+
+```{r, echo=F}
+data <- read_rds(here("~/Google Drive/My Drive/Data Science Project Work/Microsoft/Project Work/503_semiotics_of_tech_love/data/rds_files/503_df.rds"))
+```
+
+For this tutorial, let's say we have a dataset in R called `data`, that looks like the following:
+```{r}
+head(data)
+```
+
+## Solution
+
+Let's load in the required packages first:
+
+```{r libs, message=F}
+library(dplyr)
+library(ParseR)
+library(stringr)
+```
+
+To do this, firstly we extract the text variable (in this case `mention_content`) and the URL column (`mention_url`), using the `dplyr::select()` function and store these in a new data frame.
+
+```{r clean_df}
+compare_subreddits <- data %>%
+    dplyr::select(mention_content, mention_url)
+
+head(compare_subreddits)
+```
+
+The next step is to write a RegEx pattern that extracts the name of the subreddits from our `mention_url` column (in the form of '/r/subreddit'), using `stringr::str_extract`. These named subreddits are placed in a new column called `subreddits` using `dplyr::mutate`. Finally for this step, we filter out the rows where the `subreddits` column is NA (i.e. there was no subreddit found within the `mention_url` column) using `dplyr::filter()`.
+
+```{r mutate_df}
+compare_subreddits <- compare_subreddits %>%
+  dplyr::mutate(subreddits = stringr::str_extract(mention_url, "/r/\\w+/"))%>%
+  dplyr::filter(!is.na(subreddits))
+
+head(compare_subreddits)
+```
+
+Now we can start to do whatever analysis is required, for example we could count the number of posts from each subreddit in our data frame using `dplyr::count()`...
+
+```{r count_subreddits}
+compare_subreddits %>%
+  dplyr::count(subreddits, sort = TRUE)
+```
+
+... or we might want to filter out unwanted posts from questionable subreddits (such as /r/wallstreetbets) using `dplyr::filter`...
+
+```{r remove_subreddits}
+compare_subreddits %>%
+  dplyr::filter(!subreddits == "/r/wallstreetbets/")
+```
+
+... or we might want to perform a WLO to distinctness in conversations between subreddits. Say we want to compare /r/pcmasterrace, /r/mac, and /r/linuxmasterrace/, we can `dplyr::filter()` for these subreddits within the `subreddits` column, and pipe (`%>%`) this into the `ParseR::calculate_wlos` function, where our `topic_var` is the `subreddits` column and our `text_var` is the `mention_content` column.
+
+```{r wlo}
+compare_subreddits %>%
+  dplyr::filter(subreddits %in% c("/r/mac/","/r/pcmasterrace/", "/r/linuxmasterrace/")) %>%
+  ParseR::calculate_wlos(topic_var = subreddits, text_var = mention_content, top_n = 15) %>%
+  purrr::pluck("viz")
+```

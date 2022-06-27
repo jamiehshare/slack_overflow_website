@@ -1,0 +1,102 @@
+---
+title: "Reading in Multiple Data Files at Once"
+author: "Mike Tapp, Data Director"
+date: "20-05-2022"
+categories: ["purrr"]
+tags: ["import_files", "load_files"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the <code>map()</code> function.</p>
+</div>
+<div id="extracting-the-names" class="section level2">
+<h2>Extracting the names</h2>
+<p>R will always need to know the exact names of the files you are trying to read in. You could sit there an copy and paste the file names, but what if you had 20+ files? It’s not very efficient. Instead, let R do the hard work for you and find the names itself.</p>
+<p>Let’s look at the recent Adidas pitch data. There were only two files, but this principle will work no matter how many there are. First, we update are working directory so R knows where the files are saved. Then, as we know all of our files are csvs, we ask are to create an object called <code>paths</code> which is a list of all the csv files in the directory.</p>
+<pre class="r"><code>setwd(&quot;/Volumes/GoogleDrive/My Drive/Share_Clients/Data Science Project Work/Slack Overflow/reading_multiple_files/data&quot;)
+
+paths &lt;- list.files(pattern = &quot;csv$&quot;, recursive = TRUE)
+paths</code></pre>
+<pre><code>## [1] &quot;Adidas - Feb - Apr .csv&quot; &quot;Adidas - Nov - Jan .csv&quot;</code></pre>
+<p>R has correctly identified the two datafiles in the path. Now it’s time to read them in.</p>
+</div>
+<div id="using-map-to-call-the-same-function-on-multiple-objects" class="section level2">
+<h2>Using map() to call the same function on multiple objects</h2>
+<p><code>map()</code> is a special function that allows you to conduct another function over multiple objects at the same time. When you think about it, it’s exactly the kind of thing we need here. We need to call <code>read_csv()</code> multiple times and <code>map()</code> is going to save us so much time by doing all of those processes at once. The code to do so is very simple:</p>
+<pre class="r"><code>all_docs &lt;- map(paths, read_csv)</code></pre>
+<p>R has created an object called <code>all_docs</code> which is the result reading in all the csvs. Great! We aren’t quite there though because at the moment, whilst all the data is in our R environment, they are living as separate objects in that list. We need to bind them all together. For that, we can use a <code>full_join()</code></p>
+<pre class="r"><code>data &lt;- reduce(all_docs, full_join)</code></pre>
+<pre><code>## Joining, by = c(&quot;date&quot;, &quot;text&quot;, &quot;title&quot;, &quot;permalink&quot;, &quot;site name&quot;, &quot;queries&quot;,
+## &quot;lang&quot;, &quot;tone&quot;, &quot;emotion(s)&quot;, &quot;platform&quot;, &quot;post type&quot;, &quot;source name&quot;, &quot;author&quot;,
+## &quot;screen name&quot;, &quot;gender&quot;, &quot;avatar&quot;, &quot;verified author account&quot;, &quot;inferred
+## country&quot;, &quot;inferred region&quot;, &quot;inferred city&quot;, &quot;inferred longitude&quot;, &quot;inferred
+## latitude&quot;, &quot;inferred country population&quot;, &quot;inferred region population&quot;,
+## &quot;inferred city population&quot;, &quot;declared country&quot;, &quot;declared region&quot;, &quot;declared
+## city&quot;, &quot;declared longitude&quot;, &quot;declared latitude&quot;, &quot;declared country
+## population&quot;, &quot;declared region population&quot;, &quot;declared city population&quot;, &quot;twitter
+## author id&quot;, &quot;twitter followers&quot;, &quot;twitter retweets&quot;, &quot;twitter retweed of&quot;,
+## &quot;twitter replies&quot;, &quot;twitter likes&quot;, &quot;facebook author id&quot;, &quot;facebook type&quot;,
+## &quot;facebook fans&quot;, &quot;facebook likes&quot;, &quot;facebook shares&quot;, &quot;facebook comments&quot;,
+## &quot;facebook last update of the likes / shares / comments&quot;, &quot;instagram author id&quot;,
+## &quot;instagram followers&quot;, &quot;instagram likes&quot;, &quot;instagram comments&quot;, &quot;instagram
+## replies&quot;, &quot;instagram taps back&quot;, &quot;instagram taps forward&quot;, &quot;instagram exits&quot;,
+## &quot;impressions (IG numbers)&quot;, &quot;reach (IG numbers)&quot;, &quot;instagram last update of the
+## likes / comments&quot;, &quot;pinterest author ID&quot;, &quot;pinterest followers&quot;, &quot;pinterest
+## saves&quot;, &quot;pinterest photos&quot;, &quot;pinterest last update of the saves / photos&quot;, &quot;web
+## pagerank&quot;, &quot;web inbound links&quot;, &quot;web shares on twitter&quot;, &quot;web comments&quot;,
+## &quot;sinaweibo author ID&quot;, &quot;sinaweibo followers&quot;, &quot;sinaweibo reposts&quot;, &quot;sinaweibo
+## repost of&quot;, &quot;sinaweibo likes&quot;, &quot;sinaweibo comments&quot;, &quot;wechat author ID&quot;,
+## &quot;wechat wow&quot;, &quot;wechat likes&quot;, &quot;wechat reads&quot;, &quot;wechat last update of the Likes
+## / Reads&quot;, &quot;tiktok author ID&quot;, &quot;tiktok followers&quot;, &quot;tiktok views&quot;, &quot;tiktok
+## likes&quot;, &quot;tiktok shares&quot;, &quot;tiktok comments&quot;, &quot;tiktok last update of the views /
+## likes / shares / comments&quot;, &quot;douyin author ID&quot;, &quot;douyin likes&quot;, &quot;douyin
+## comments&quot;, &quot;douyin last update of the likes / comments&quot;, &quot;red likes&quot;, &quot;red
+## comments&quot;, &quot;red stars&quot;, &quot;red last update of the likes / comments / stars&quot;,
+## &quot;youtube author ID&quot;, &quot;youtube views&quot;, &quot;youtube likes&quot;, &quot;youtube dislikes&quot;,
+## &quot;youtube comments&quot;, &quot;youtube favourites&quot;, &quot;youtube last update of views&quot;,
+## &quot;dailymotion author ID&quot;, &quot;dailymotion views&quot;, &quot;dailymotion comments&quot;,
+## &quot;dailymotion last update of views&quot;, &quot;vkontakte author ID&quot;, &quot;vkontakte
+## Fans/Members&quot;, &quot;vkontakte likes&quot;, &quot;vkontakte comments&quot;, &quot;vkontakte shares&quot;,
+## &quot;vkontakte last update of likes / comments / shares&quot;, &quot;reviews Radarly
+## normalized rating&quot;, &quot;reviews platform rating&quot;, &quot;impressions&quot;, &quot;estimated
+## reach&quot;, &quot;engagement actions&quot;, &quot;embedded url&quot;, &quot;media type&quot;, &quot;media url&quot;, &quot;image
+## analysis_People detected&quot;, &quot;image analysis_Gender detected&quot;, &quot;image
+## analysis_Object(s) and animal(s) detected&quot;, &quot;image analysis_Logo(s) detected&quot;,
+## &quot;favorite&quot;, &quot;keywords&quot;, &quot;hashtags&quot;, &quot;mentions&quot;, &quot;named entities&quot;, &quot;story&quot;,
+## &quot;topics&quot;, &quot;content classification&quot;, &quot;Custom field : TNF High End&quot;, &quot;Custom
+## field : Gore-Tex&quot;, &quot;Custom field : Technical Solutions&quot;, &quot;Custom field :
+## Brands&quot;, &quot;Custom field : Sports&quot;, &quot;Custom field : Moshi Topics&quot;, &quot;Custom field
+## : Ad Posts&quot;, &quot;Custom field : Profanity2&quot;, &quot;Custom field : Occasions&quot;, &quot;Custom
+## field : NeedStates&quot;, &quot;Custom field : Interests&quot;)</code></pre>
+<pre class="r"><code>data</code></pre>
+<pre><code>## # A tibble: 100,000 × 140
+##    date       text  title permalink `site name` queries lang  tone  `emotion(s)`
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;       
+##  1 08/02/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  2 02/03/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  3 16/03/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  4 16/04/202… &quot;Loo… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+##  5 27/04/202… &quot;Hum… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  6 30/03/202… &quot;It’… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+##  7 15/02/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  8 09/03/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  9 23/02/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+## 10 09/03/202… &quot;🚨…  &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+## # … with 99,990 more rows, and 131 more variables: platform &lt;chr&gt;,
+## #   `post type` &lt;chr&gt;, `source name` &lt;lgl&gt;, author &lt;chr&gt;, `screen name` &lt;chr&gt;,
+## #   gender &lt;chr&gt;, avatar &lt;chr&gt;, `verified author account` &lt;chr&gt;,
+## #   `inferred country` &lt;chr&gt;, `inferred region` &lt;chr&gt;, `inferred city` &lt;chr&gt;,
+## #   `inferred longitude` &lt;dbl&gt;, `inferred latitude` &lt;dbl&gt;,
+## #   `inferred country population` &lt;dbl&gt;, `inferred region population` &lt;dbl&gt;,
+## #   `inferred city population` &lt;dbl&gt;, `declared country` &lt;chr&gt;, …</code></pre>
+<p>So there were are - all the data exports loaded in and bound into one object quickly and efficiently!</p>
+</div>

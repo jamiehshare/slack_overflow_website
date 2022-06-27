@@ -1,0 +1,102 @@
+---
+title: "Combine data frames with new column"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-10"
+categories: ["dplyr", "gdata"]
+tags: ["cleaning", "plot", "tidyverse"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.</p>
+<p>In this example, we are going to use three dummy data frames called <code>amazon</code>, <code>microsoft</code>, and <code>google</code>, which contain the columns <code>message_id</code>, <code>message</code>, and <code>author</code>- though the solutions provided would work even if the data frames had many more columns.</p>
+<pre class="r"><code>head(amazon)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   message_id message                                                      author
+##   &lt;chr&gt;      &lt;chr&gt;                                                        &lt;chr&gt; 
+## 1 12345      Amazon was founded in 1994 from my Garage in Bellevue, Wash… Jeff …
+## 2 23456      What do you call two monkeys that share an Amazon Account? … Tom S…
+## 3 34567      30% of the world&#39;s species live in the Amazon                David…</code></pre>
+<pre class="r"><code>head(microsoft)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   message_id message                                                      author
+##   &lt;chr&gt;      &lt;chr&gt;                                                        &lt;chr&gt; 
+## 1 123        The name Microsoft is a combination of the words microcompu… Mike …
+## 2 456        MS Office was released on the Macintosh before the Windows … @fact…
+## 3 789        RT @facts_r_us MS Office was released on the Macintosh befo… @retw…</code></pre>
+<pre class="r"><code>head(google)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   message_id message                                                      author
+##   &lt;chr&gt;      &lt;chr&gt;                                                        &lt;chr&gt; 
+## 1 22         A Googol is a 1 with 100 zeros after it                      Larry…
+## 2 33         Check out these amazing Google facts that will blow your mi… Elgoog
+## 3 44         Google is the world&#39;s most visited website                   Googl…</code></pre>
+</div>
+<div id="solution-1--mutate-and-then-bind_rows" class="section level2">
+<h2>Solution 1- <code>mutate()</code> and then <code>bind_rows()</code></h2>
+<p>One solution is to add a new variable to each data frame individually using the <code>dplyr::mutate()</code> function, and then bind these individual data frames into one using the <code>dplyr::bind_rows()</code> function.</p>
+<pre class="r"><code>library(dplyr)
+
+amazon_mutated &lt;- amazon %&gt;% 
+  dplyr::mutate(source = &quot;amazon&quot;)
+
+microsoft_mutated &lt;- microsoft %&gt;% 
+  dplyr::mutate(source = &quot;microsoft&quot;)
+
+google_mutated &lt;- google %&gt;% 
+  dplyr::mutate(source = &quot;google&quot;)
+
+combined_df &lt;- dplyr::bind_rows(amazon_mutated, microsoft_mutated, google_mutated)</code></pre>
+<p>Here, we used <code>dplyr::mutate()</code> to create a new column called <code>source</code>, which we labelled with the name of each data frame, before binding using <code>dplyr::bind_rows()</code> to produce our new data frame called <code>combined_df</code>. We can view what this dataframe looks like, with our new <code>source</code> column:</p>
+<pre class="r"><code>head(combined_df)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##   message_id message                                               author source
+##   &lt;chr&gt;      &lt;chr&gt;                                                 &lt;chr&gt;  &lt;chr&gt; 
+## 1 12345      Amazon was founded in 1994 from my Garage in Bellevu… Jeff … amazon
+## 2 23456      What do you call two monkeys that share an Amazon Ac… Tom S… amazon
+## 3 34567      30% of the world&#39;s species live in the Amazon         David… amazon
+## 4 123        The name Microsoft is a combination of the words mic… Mike … micro…
+## 5 456        MS Office was released on the Macintosh before the W… @fact… micro…
+## 6 789        RT @facts_r_us MS Office was released on the Macinto… @retw… micro…</code></pre>
+</div>
+<div id="solution-2--quicker-with-gdatacombine" class="section level2">
+<h2>Solution 2- quicker with <code>gdata::combine()</code></h2>
+<p>A quicker and simpler way to achieve the same result is using the <code>gdata::combine()</code> function. This combines our data frames into rows of a new data frame with the additional column <code>source</code>, all at once. The value of this new <code>source</code> column is the name of the original (source) data frame.</p>
+<p><strong>N.B. the first time you run this function, you may have to install the <code>gdata</code> library</strong></p>
+<pre class="r"><code>install.packages(&quot;gdata&quot;)</code></pre>
+<pre class="r"><code>library(gdata)
+
+combined_df &lt;- gdata::combine(amazon, microsoft, google)
+
+head(combined_df)</code></pre>
+<pre><code>##   message_id
+## 1      12345
+## 2      23456
+## 3      34567
+## 4        123
+## 5        456
+## 6        789
+##                                                                        message
+## 1               Amazon was founded in 1994 from my Garage in Bellevue, Washing
+## 2       What do you call two monkeys that share an Amazon Account? Prime mates
+## 3                                30% of the world&#39;s species live in the Amazon
+## 4  The name Microsoft is a combination of the words microcomputer and software
+## 5                MS Office was released on the Macintosh before the Windows OS
+## 6 RT @facts_r_us MS Office was released on the Macintosh before the Windows OS
+##               author    source
+## 1         Jeff Bezos    amazon
+## 2          Tom Smith    amazon
+## 3 David Attenborough    amazon
+## 4        Mike O&#39;Soft microsoft
+## 5        @facts_r_us microsoft
+## 6       @retweet_bot microsoft</code></pre>
+<p>Et voilà, now we have a new data frame with an additional <code>source</code> column with just one line of code!</p>
+</div>

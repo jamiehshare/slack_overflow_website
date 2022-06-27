@@ -1,0 +1,49 @@
+---
+title: "Issues with fonts"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-10"
+categories: ["extrafont"]
+tags: ["fonts", "polygon_edge", "errors"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>When trying to plot a visualisation (e.g. bigrams), you are greeted with the following error message:</p>
+<center>
+<div class="figure">
+<img src="/error_message.png" style="width:70.0%" alt="" />
+<p class="caption"><em>Type of error message we may see</em></p>
+</div>
+</center>
+<p>This is an issue with R being unable to find the appropriate fonts to produce our plot.</p>
+</div>
+<div id="the-solution--reinstall-fonts-and-restart-r-session." class="section level2">
+<h2>The Solution- reinstall fonts and restart R session.</h2>
+<p>We need to make sure we have the correct fonts installed on our computers, and also imported into R.</p>
+<p>The fonts that we need to make sure we have installed are:<br />
+- “Neue Haas Grotesk Text Pro 55 Roman”
+- “Neue Haas Grotesk Text Pro 65 Medium”
+- “Neue Haas Grotesk Text Pro 75 Bold”.</p>
+<p>We can check this by opening up our Font Book application on our Macs. To do this, press ⌘ + space and type “Font Book”, and it should appear. We can then double check that these fonts appear:</p>
+<center>
+<div class="figure">
+<img src="/font_screenshot.png" alt="" />
+<p class="caption"><em>List of fonts as they appear in Font Book</em></p>
+</div>
+</center>
+<p>If we do not have these fonts, they can be downloaded from <a href="">enter link here</a>.</p>
+<p>Now, we can run the following code in R to rebook our fonts and make sure all of our system fonts (from Font Book) are imported into R.</p>
+<pre class="r"><code>library(extrafont)
+font_import()
+loadfonts()</code></pre>
+<p>Now a quick reboot of R (you can do this by clicking the “Session” from the RStudio menu bar and choosing “Restart R”) should enable you to continue plotting to your hearts content.</p>
+<p><strong>N.B. Before restarting R, make sure you save any large datasets (e.g. ldas, explore object) and/or scripts you may be working on! As a recommendation, save the datasets as an <code>.rds</code> file using the <code>readr::write_rds()</code> function</strong></p>
+</div>

@@ -1,0 +1,111 @@
+---
+title: "Extracting and filtering for subreddits"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-10"
+categories: ["dplyr", "ParseR", "stringr", "purrr"]
+tags: ["extract", "filtering", "reddit"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="the-problem" class="section level2">
+<h2>The problem</h2>
+<p>Sometimes we might received data from a social listening ouput and we want to be able to filter for subreddits of interest.</p>
+<p>For this tutorial, let’s say we have a dataset in R called <code>data</code>, that looks like the following:</p>
+<pre class="r"><code>head(data)</code></pre>
+<pre><code>## # A tibble: 6 × 14
+##   project_id date       author          mention_content  ave_sentiment sentiment
+##        &lt;int&gt; &lt;date&gt;     &lt;chr&gt;           &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;    
+## 1          1 2022-04-27 Instagram User  love airpods co…         0.287 POSITIVE 
+## 2          2 2022-04-10 MrSlowestD16    support apple d…         0.294 POSITIVE 
+## 3          3 2022-04-06 SkyRiseElite101 absolutely bril…         0.358 POSITIVE 
+## 4          4 2022-04-10 Scott76655335   amazon comau ro…         0.399 POSITIVE 
+## 5          5 2022-04-27 rmo777          love google              0.236 POSITIVE 
+## 6          6 2022-04-28 vigilantebff    pretty good hig…         0.366 POSITIVE 
+## # … with 8 more variables: mention_url &lt;chr&gt;, string_length &lt;int&gt;,
+## #   word_count &lt;int&gt;, sd &lt;dbl&gt;, text_copy &lt;chr&gt;, apple &lt;lgl&gt;, amazon &lt;lgl&gt;,
+## #   amend_id &lt;int&gt;</code></pre>
+</div>
+<div id="solution" class="section level2">
+<h2>Solution</h2>
+<p>Let’s load in the required packages first:</p>
+<pre class="r"><code>library(dplyr)
+library(ParseR)
+library(stringr)
+library(purrr)</code></pre>
+<p>To do this, firstly we extract the text variable (in this case <code>mention_content</code>) and the URL column (<code>mention_url</code>), using the <code>dplyr::select()</code> function and store these in a new data frame.</p>
+<pre class="r"><code>compare_subreddits &lt;- data %&gt;%
+    dplyr::select(mention_content, mention_url)
+
+head(compare_subreddits)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   mention_content                                                    mention_url
+##   &lt;chr&gt;                                                              &lt;chr&gt;      
+## 1 love airpods convenient biggest unlike generations case recharges… https://ww…
+## 2 support apple decision support vulkan developer write graphics dr… https://ww…
+## 3 absolutely brilliant amd intel finally start trade blows hit lowe… https://ww…
+## 4 amazon comau robotics system building cars im pretty tesla         https://tw…
+## 5 love google                                                        https://tw…
+## 6 pretty good highly recommend loved freddie hp bridgerton           https://tw…</code></pre>
+<p>The next step is to write a RegEx pattern that extracts the name of the subreddits from our <code>mention_url</code> column (in the form of ‘/r/subreddit’), using <code>stringr::str_extract</code>. These named subreddits are placed in a new column called <code>subreddits</code> using <code>dplyr::mutate</code>. Finally for this step, we filter out the rows where the <code>subreddits</code> column is NA (i.e. there was no subreddit found within the <code>mention_url</code> column) using <code>dplyr::filter()</code>.</p>
+<pre class="r"><code>compare_subreddits &lt;- compare_subreddits %&gt;%
+  dplyr::mutate(subreddits = stringr::str_extract(mention_url, &quot;/r/\\w+/&quot;))%&gt;%
+  dplyr::filter(!is.na(subreddits))
+
+head(compare_subreddits)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   mention_content                                         mention_url subreddits
+##   &lt;chr&gt;                                                   &lt;chr&gt;       &lt;chr&gt;     
+## 1 install linux ubuntu popos dual boot convince things e… https://ww… /r/thinkp…
+## 2 nato buy titanium band amazon ll love titanium band fi… https://ww… /r/OmegaW…
+## 3 found facebook love nanny degree ece previously worked… https://ww… /r/bayare…
+## 4 cooling blankets shiny striped bamboo amazon shiny wor… https://ww… /r/Menopa…
+## 5 amazon approved exception return product year late tho… https://ww… /r/boardg…
+## 6 mount sigma mm f extremely sharp favorite shot sony ap… https://ww… /r/fujifi…</code></pre>
+<p>Now we can start to do whatever analysis is required, for example we could count the number of posts from each subreddit in our data frame using <code>dplyr::count()</code>…</p>
+<pre class="r"><code>compare_subreddits %&gt;%
+  dplyr::count(subreddits, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 9,279 × 2
+##    subreddits              n
+##    &lt;chr&gt;               &lt;int&gt;
+##  1 /r/apple/             956
+##  2 /r/pcmasterrace/      841
+##  3 /r/mac/               671
+##  4 /r/AskReddit/         623
+##  5 /r/ipad/              621
+##  6 /r/macbookpro/        546
+##  7 /r/linuxmasterrace/   531
+##  8 /r/thinkpad/          475
+##  9 /r/buildapc/          457
+## 10 /r/linux_gaming/      438
+## # … with 9,269 more rows</code></pre>
+<p>… or we might want to filter out unwanted posts from questionable subreddits (such as /r/wallstreetbets) using <code>dplyr::filter</code>…</p>
+<pre class="r"><code>compare_subreddits %&gt;%
+  dplyr::filter(!subreddits == &quot;/r/wallstreetbets/&quot;)</code></pre>
+<pre><code>## # A tibble: 59,361 × 3
+##    mention_content                                        mention_url subreddits
+##    &lt;chr&gt;                                                  &lt;chr&gt;       &lt;chr&gt;     
+##  1 install linux ubuntu popos dual boot convince things … https://ww… /r/thinkp…
+##  2 nato buy titanium band amazon ll love titanium band f… https://ww… /r/OmegaW…
+##  3 found facebook love nanny degree ece previously worke… https://ww… /r/bayare…
+##  4 cooling blankets shiny striped bamboo amazon shiny wo… https://ww… /r/Menopa…
+##  5 amazon approved exception return product year late th… https://ww… /r/boardg…
+##  6 mount sigma mm f extremely sharp favorite shot sony a… https://ww… /r/fujifi…
+##  7 great running google mesh router google nest hub add … https://ww… /r/homeau…
+##  8 wondering copy redhat unlimited updates customer supp… https://ww… /r/linuxm…
+##  9 great gmail hangouts easy imo                          https://ww… /r/Minecr…
+## 10 knowledge helios bad good lenovo legion y legion disa… https://ww… /r/Sugges…
+## # … with 59,351 more rows</code></pre>
+<p>… or we might want to perform a WLO to distinctness in conversations between subreddits. Say we want to compare /r/pcmasterrace, /r/mac, and /r/linuxmasterrace/, we can <code>dplyr::filter()</code> for these subreddits within the <code>subreddits</code> column, and pipe (<code>%&gt;%</code>) this into the <code>ParseR::calculate_wlos</code> function, where our <code>topic_var</code> is the <code>subreddits</code> column and our <code>text_var</code> is the <code>mention_content</code> column.</p>
+<pre class="r"><code>compare_subreddits %&gt;%
+  dplyr::filter(subreddits %in% c(&quot;/r/mac/&quot;,&quot;/r/pcmasterrace/&quot;, &quot;/r/linuxmasterrace/&quot;)) %&gt;%
+  ParseR::calculate_wlos(topic_var = subreddits, text_var = mention_content, top_n = 15) %&gt;%
+  purrr::pluck(&quot;viz&quot;)</code></pre>
+<p><img src="/post/2022-06-10-subreddit_extraction/subreddit_extraction_files/figure-html/wlo-1.png" width="672" /></p>
+</div>
