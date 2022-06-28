@@ -17,6 +17,8 @@ library(tidyverse)
 knitr::opts_knit$set(root.dir = "/Volumes/GoogleDrive/My Drive/Share_Clients/Data Science Project Work/Slack Overflow/reading_multiple_files/data")
 ```
 
+#### *Answer originally provided by Mike Tapp, Data Director*
+
 ## The Problem
 
 Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we're going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the `map()` function.

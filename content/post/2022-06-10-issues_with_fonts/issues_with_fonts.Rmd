@@ -3,7 +3,7 @@ title: "Issues with fonts"
 author: "Jamie Hudson, Data Scientist"
 date: "2022-06-10"
 categories: ["extrafont"]
-tags: ["fonts", "polygon_edge", "errors"]
+tags: ["fonts", "polygon_edge", "errors", "error in grid.call"]
 output:
   html_document:
     toc: true
@@ -15,6 +15,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+#### *Answer originally provided by Jack Penzer, Data Scientist*
 
 ## The Problem
 

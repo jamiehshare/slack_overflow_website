@@ -16,6 +16,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+#### *Answer originally provided by Jamie Hudson, Data Scientist*
+
 ## The Problem
 
 Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.
