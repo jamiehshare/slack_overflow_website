@@ -16,7 +16,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#### *Answer originally provided by Jamie Hudson, Data Scientist*
+#### *Answer originally provided by Jack Penzer & Jamie Hudson, Data Scientists*
 
 ## The Problem
 
