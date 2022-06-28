@@ -1,0 +1,65 @@
+---
+title: "Updating Packages"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-28"
+categories: [""]
+tags: ["packages", "update", "install.packages"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="topic-originally-suggested-by-mike-tapp-data-diretor" class="section level4">
+<h4><em>Topic originally suggested by Mike Tapp, Data Diretor</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.</p>
+<p>We can update packages in a few ways:</p>
+</div>
+<div id="using-r-script" class="section level2">
+<h2>Using R script</h2>
+<p>If we know a specific package that needs to be updated, we can run the code:</p>
+<pre class="r"><code>install.packages(&quot;PACKAGE_NAME&quot;)</code></pre>
+<p>So for example:</p>
+<pre class="r"><code>install.packages(&quot;ggplot2&quot;)</code></pre>
+<p><em>Note the quotation marks surrounding the package name</em></p>
+</div>
+<div id="using-the-r-package-manager" class="section level2">
+<h2>Using the R Package Manager</h2>
+<p>An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right hand corner), there is an “<em>Update</em>” button, which you can click to give you a list of packages that are ready to be updated.</p>
+<center>
+<img src="/update_packages.png" style="width:70.0%" />
+</center>
+<p>From there, we can click “<em>Select All</em>” and click “<em>Install Updates</em>”.</p>
+<center>
+<img src="/update_packages_2.png" style="width:70.0%" />
+</center>
+<p>We will then normally be told that R will be restarted during this process. This is <strong><em>normally</em></strong> okay and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe.</p>
+</div>
+<div id="to-update-share-packages" class="section level2">
+<h2>To update Share packages</h2>
+<p>To update the Share packages we can’t use the Packages pane (as they are hosted privately for us). Therefore to update these packages as and when required (<em>The DS team will put out a message advising updating when appropriate</em>), we run the same code we originally used to install them in the first place.</p>
+<pre class="r"><code>devtools::install_github(repo = &quot;Avery-Island/ParseR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)
+
+devtools::install_github(repo = &quot;Avery-Island/SegmentR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)
+
+devtools::install_github(repo = &quot;Avery-Island/ConnectR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)
+
+devtools::install_github(repo = &quot;Avery-Island/HelpR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)</code></pre>
+<p>Here we just need to make sure we change the <code>auth_token = "let_me_in_please"</code> line to our authentication token that you received from Mike when you first downloaded the package.</p>
+<p>🚨As an aside, once a package has been installed once (through <code>install.packages("PACKAGE_NAME")</code>, we do not need to install it again. It is saved in a directory called “library” in our R environment. Therefore to use these packages in future R sessions, we only need to load them using <code>library(PACKAGE_NAME)</code>🚨</p>
+</div>

@@ -1,0 +1,86 @@
+---
+title: "Updating Packages"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-28"
+categories: [""]
+tags: ["packages", "update", "install.packages"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### *Topic originally suggested by Mike Tapp, Data Diretor*
+
+## The Problem
+
+Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs. 
+
+We can update packages in a few ways:
+
+## Using R script
+
+If we know a specific package that needs to be updated, we can run the code:
+
+```{r, eval=FALSE}
+install.packages("PACKAGE_NAME")
+```
+
+So for example:
+
+```{r, eval=FALSE}
+install.packages("ggplot2")
+```
+
+*Note the quotation marks surrounding the package name*
+
+## Using the R Package Manager
+
+An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right hand corner), there is an "*Update*" button, which you can click to give you a list of packages that are ready to be updated. 
+
+<center>
+![](/update_packages.png){width=70%}
+</center>
+
+From there, we can click "*Select All*" and click "*Install Updates*".
+
+<center>
+![](/update_packages_2.png){width=70%}
+</center>
+
+We will then normally be told that R will be restarted during this process. This is ***normally*** okay and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe. 
+
+## To update Share packages
+
+To update the Share packages we can't use the Packages pane (as they are hosted privately for us). Therefore to update these packages as and when required (*The DS team will put out a message advising updating when appropriate*), we run the same code we originally used to install them in the first place.
+
+```{r, eval=F}
+devtools::install_github(repo = "Avery-Island/ParseR",
+                         auth_token = "let_me_in_please",
+                         force = TRUE)
+
+devtools::install_github(repo = "Avery-Island/SegmentR",
+                         auth_token = "let_me_in_please",
+                         force = TRUE)
+
+devtools::install_github(repo = "Avery-Island/ConnectR",
+                         auth_token = "let_me_in_please",
+                         force = TRUE)
+
+devtools::install_github(repo = "Avery-Island/HelpR",
+                         auth_token = "let_me_in_please",
+                         force = TRUE)
+```
+
+Here we just need to make sure we change the `auth_token = "let_me_in_please"` line to our authentication token that you received from Mike when you first downloaded the package.
+
+🚨As an aside, once a package has been installed once (through `install.packages("PACKAGE_NAME")`, we do not need to install it again. It is saved in a directory called "library" in our R environment. Therefore to use these packages in future R sessions, we only need to load them using `library(PACKAGE_NAME)`🚨
+
+
+

@@ -1,0 +1,95 @@
+---
+title: "Creating Snippets"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-28"
+categories: [""]
+tags: ["snippet","tips"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="topic-originally-suggested-by-jack-penzer-data-scientist" class="section level4">
+<h4><em>Topic originally suggested by Jack Penzer, Data Scientist</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.</p>
+</div>
+<div id="what-are-code-snippets" class="section level2">
+<h2>What are Code Snippets?</h2>
+<p>Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency.</p>
+</div>
+<div id="example-1---load-share-packages" class="section level2">
+<h2>Example 1 - load Share packages</h2>
+<p>As a first example, we will create a code snippet that quickly enables us to insert the text that enables us to load all of the Share R packages.</p>
+<p><em>Obviously this can be edited to packages that you know you use more often (e.g. perhaps <code>tidyverse</code> rather than <code>ConnectR</code>)</em></p>
+<ul>
+<li>Go to <em>Tools</em> &gt; <em>Global Options</em> &gt; <em>Code</em> (or ⌘ , and then <em>Code</em>)</li>
+<li>Make sure <em>Enable code snippets</em> is ticked.</li>
+<li>Click on <em>Edit Snippets…</em></li>
+</ul>
+<center>
+<img src="/snippets.png" style="width:70.0%" />
+</center>
+<ul>
+<li>Now scroll to the bottom of the snippet editor and paste the following code:</li>
+</ul>
+<pre class="r"><code>snippet share_libs
+  library(ParseR)
+  library(SegmentR)
+  library(HelpR)
+  library(ConnectR)</code></pre>
+<p><em>Note that each line after the <code>snippet</code> line needs to start with a tab.</em></p>
+<ul>
+<li>Now click <em>Save</em> and <em>Ok</em> to exit the preferences window</li>
+</ul>
+<p>We are now able to use our snippet. In our R script, RMarkdown document, or console, type in <code>share_libs</code> and enter tab. Our libraries should now appear, and we can run this code as normal to load the libraries.</p>
+</div>
+<div id="example-2---formatting-r-script" class="section level2">
+<h2>Example 2 - formatting R script</h2>
+<p>Another useful example of snippets is to produce a template R script that one can always use when starting a project.</p>
+<p>For example, it is good practice for R scripts to start with the following information:</p>
+<ul>
+<li>Title</li>
+<li>Author</li>
+<li>Date</li>
+<li>Date source</li>
+</ul>
+<p>followed by other sections we know we use in every script, such as loading libraries, reading in data, and cleaning data.</p>
+<p>This is what we want our snippet to end up looking like:</p>
+<pre class="r"><code># Title: 
+# Author: 
+# Date created: 
+
+# load libraries ----------------------------------------------------------
+
+# read in data ------------------------------------------------------------
+
+# clean data --------------------------------------------------------------</code></pre>
+<p>💡<em>Note that the <code># load libraries -----</code> is what is known as a “code section”. These sections allow us to break large scripts into discrete regions for easy navigation. These sections are foldable, meaning the have a little arrow next to the line number on the left hand side of our script, which allows us to collapse this section to make it easy on the eye, if needed. We can insert these sections by pressing ⌘ + Shift + R, and then typing in your label heading.</em></p>
+<p>Now, back to the creation of the snippet. We could copy and paste the above into the snippet editor as before- however, then we would have to manually select next to “Title:” and type our title, then select next to “Author:” and type our name etc. As R is brilliant, it can help with this (remember, we like to automate as many things as people), but we have to do a little bit of work now to facilitate this.</p>
+<p>For any section we want to be able to edit quickly, we add the following code:</p>
+<p><code>${1:NAME_OF_TEXT}</code></p>
+<p>Changing the number <code>1</code> to be the order this appears in the snippet (i.e. in our example 1 = Title, 2 = Author, etc), and <code>NAME_OF_TEXT</code> to be the general name of the bit of information we are coding for (i.e. Title, Name, etc).</p>
+<p>Therefore, our code snippet that we copy and paste into the snippet editor would be:</p>
+<pre class="r"><code>snippet share_script
+    # Title: ${1:Title}
+    # Author: ${2:Name}
+    # Date created: `r Sys.Date()`
+    
+    # load libraries ----------------------------------------------------------
+
+    # read in data ------------------------------------------------------------
+
+    # clean data --------------------------------------------------------------</code></pre>
+<p>🚨 <em>Note that for some reason with the way the code above appears on the Slack Overflow website, when you copy and paste it into the snippet editor, you will see red boxes to the side of the hashtags. This is because it thinks we have more than one tab before each line. To fix this, just make sure there is only one tab per line as mentioned before, and the red boxes will disappear.</em>🚨 <em>Also, the code 2022-06-28 automatically completes todays date for us based on our computers settings.</em></p>
+<p>Now we should be able to type <code>share_script</code> in a blank R script, and it will automatically population with a nice template. The curser will automatically highlight the <code>Title</code>, so we can just type our title, press tab, and then it will automatically highlight <code>Name</code>, where we can type our Name, and press tab again.</p>
+<p>We can even combined these two examples so that the R script template automatically includes certain packages in the <code>load libraries</code> sections.</p>
+<p>Happy snippet creating!</p>
+</div>
