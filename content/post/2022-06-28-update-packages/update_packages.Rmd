@@ -2,7 +2,7 @@
 title: "Updating Packages"
 author: "Jamie Hudson, Data Scientist"
 date: "2022-06-28"
-categories: [""]
+categories: ["ParseR", "SegmentR", "ConnectR", "HelpR"]
 tags: ["packages", "update", "install.packages"]
 output:
   html_document:
