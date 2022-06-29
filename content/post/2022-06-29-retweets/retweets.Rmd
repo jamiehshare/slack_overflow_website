@@ -1,0 +1,85 @@
+---
+title: "Extract Comment from Quote Tweet"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-29"
+categories: ["tidyverse", "janitor"]
+tags: ["twitter","retweets", "data cleaning"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### *Topic originally suggested by Jack Penzer, Data Scientist*
+
+## The Problem
+
+🚨**Note this is only relevant to data that has not come from Sprinklr. Quoted retweet's are classified as mentions in sprinklr and only simple retweets are considered retweets**🚨
+
+When creating bigram networks and performing topic modelling on Twitter data it can often be difficult to deal with retweets (RTs).
+
+If we leave all RTs in the data set, the bigram networks will comprise only the most retweeted RTs, as will most of the topics inferred through topic modelling.
+
+However, if we blanket remove all RTs, we will also lose the quote RTs, which contain text separate from the RT.
+
+## The Solution
+
+A happy medium is to remove the retweeted part of each quote RT, leaving the novel text to be analysed separately (which will not disrupt our bigram networks and topic modelling processes).
+
+Warning: check the specific output of RTs first as in the third code block.
+
+First things first, let's load the libraries we will be using:
+```{r, message=F}
+library(tidyverse)
+library(janitor)
+```
+
+And then load in some sample data, which we will call `demo`. You will see I also select only a few columns, this is for clarity in visualising the dataframe in this tutorial and we do not recommend selecting such few columns for a real-life situation.
+```{r, message = F}
+demo <- read_csv("data/demo.csv") %>%
+  clean_names() %>%
+  select(date, media_type, publisher_username, mention_content)
+  head(20)
+
+head(demo)
+```
+
+In this example, we can see that our text variable is stored in a column called `mention_content`. For illustrative purposes, let's rename this to `text` and then find us some RTs:
+```{r}
+demo_RTs <- demo %>%
+  rename(text = mention_content) %>%
+  select(text) %>%
+  filter(str_detect(text, "\\bRT\\b"))
+```
+
+We use the function `str_detect()` to search for strings within the `text` column that match the regex pattern `"\\bRT\\b`. This pattern tells R to find the term "RT" before and after word boundaries (the transition between word and non-word characters), meaning we will not find words such as "FURTHER", as the "RT" is not next to a word boundary.
+
+By viewing `demo_RTs`, we can see we have two posts that match the filtering criteria:
+
+```{r}
+demo_RTs
+```
+
+The eagle-eyed amongst us will notice both of these posts have the quoted text before a " RT @" pattern- so they come with a RT tag followed by the username of the person they're retweeting followed by the original tweet.
+
+Now let's mutate a new column and name it `rt_info`. This will check if the post is a RT, and if it is, take the RT tag and the proceeding text and add it to a new column.
+
+Then in the next mutate we'll edit our `text` column, checking if each post is a RT, and if it is we'll extract all the text up to the RT tag and forget about the rest - which is stored in rt_info:
+ 
+```{r}
+demo_RTs <- demo_RTs  %>%
+  mutate(rt_info = ifelse(str_detect(text, "\\bRT\\b"), str_match(text, "\\bRT\\b @.*"), "emptystring")) %>%
+  mutate(text = ifelse(str_detect(text, "\\bRT\\b"), str_match(text, ".* \\bRT\\b"), text))
+
+demo_RTs
+```
+
+Now we can see that our `text` column has two posts, each of them quoted RTs, and our `rt_info` column includes all information relating to the RT itself. Now we can analyse the quoted RTs, and the original tweets' information if need be.
+
+🚨**Note leaving the "RT" at the end of the quoted RTs is intentional, so that posts can still be tracked easily as quote RTs, and in the topic modelling process we'll still see that the topic comprises a number of quote RTs, but can be removed with mutate `(text = str_remove_all(text, "\\bRT\\b"))`**🚨

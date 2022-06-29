@@ -1,0 +1,78 @@
+---
+title: "Extract Comment from Quote Tweet"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-29"
+categories: ["tidyverse", "janitor"]
+tags: ["twitter","retweets", "data cleaning"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="topic-originally-suggested-by-jack-penzer-data-scientist" class="section level4">
+<h4><em>Topic originally suggested by Jack Penzer, Data Scientist</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>🚨<strong>Note this is only relevant to data that has not come from Sprinklr. Quoted retweet’s are classified as mentions in sprinklr and only simple retweets are considered retweets</strong>🚨</p>
+<p>When creating bigram networks and performing topic modelling on Twitter data it can often be difficult to deal with retweets (RTs).</p>
+<p>If we leave all RTs in the data set, the bigram networks will comprise only the most retweeted RTs, as will most of the topics inferred through topic modelling.</p>
+<p>However, if we blanket remove all RTs, we will also lose the quote RTs, which contain text separate from the RT.</p>
+</div>
+<div id="the-solution" class="section level2">
+<h2>The Solution</h2>
+<p>A happy medium is to remove the retweeted part of each quote RT, leaving the novel text to be analysed separately (which will not disrupt our bigram networks and topic modelling processes).</p>
+<p>Warning: check the specific output of RTs first as in the third code block.</p>
+<p>First things first, let’s load the libraries we will be using:</p>
+<pre class="r"><code>library(tidyverse)
+library(janitor)</code></pre>
+<p>And then load in some sample data, which we will call <code>demo</code>. You will see I also select only a few columns, this is for clarity in visualising the dataframe in this tutorial and we do not recommend selecting such few columns for a real-life situation.</p>
+<pre class="r"><code>demo &lt;- read_csv(&quot;data/demo.csv&quot;) %&gt;%
+  clean_names() %&gt;%
+  select(date, media_type, publisher_username, mention_content)
+  head(20)</code></pre>
+<pre><code>## [1] 20</code></pre>
+<pre class="r"><code>head(demo)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##   date       media_type publisher_username mention_content                      
+##   &lt;date&gt;     &lt;chr&gt;      &lt;chr&gt;              &lt;chr&gt;                                
+## 1 2022-06-02 Twitter    PradoEirin         La ilustración de hoy en @_Boreal_ p…
+## 2 2022-06-02 Twitter    AugustoMetztli     La mayonesa, el pan bimbo… y Get Bac…
+## 3 2022-06-02 Twitter    _Boreal_           La mayonesa, el pan bimbo… y Get Bac…
+## 4 2022-06-02 Twitter    ANYWAYSNOW         no hay absolutamente nada para desay…
+## 5 2022-06-02 Twitter    monnuwrai          después del caldito me comí un pedaz…
+## 6 2022-06-02 Twitter    nathmarz           A punto de morir por comer unas puta…</code></pre>
+<p>In this example, we can see that our text variable is stored in a column called <code>mention_content</code>. For illustrative purposes, let’s rename this to <code>text</code> and then find us some RTs:</p>
+<pre class="r"><code>demo_RTs &lt;- demo %&gt;%
+  rename(text = mention_content) %&gt;%
+  select(text) %&gt;%
+  filter(str_detect(text, &quot;\\bRT\\b&quot;))</code></pre>
+<p>We use the function <code>str_detect()</code> to search for strings within the <code>text</code> column that match the regex pattern <code>"\\bRT\\b</code>. This pattern tells R to find the term “RT” before and after word boundaries (the transition between word and non-word characters), meaning we will not find words such as “FURTHER”, as the “RT” is not next to a word boundary.</p>
+<p>By viewing <code>demo_RTs</code>, we can see we have two posts that match the filtering criteria:</p>
+<pre class="r"><code>demo_RTs</code></pre>
+<pre><code>## # A tibble: 2 × 1
+##   text                                                                          
+##   &lt;chr&gt;                                                                         
+## 1 Se mamaron con los precios yo con un kilo de arroz y una bolsa pan de bimbo e…
+## 2 ¡Uy, qué miedo! ¿Dónde ha estado desde diciembre de 2018? Yo me acuerdo que u…</code></pre>
+<p>The eagle-eyed amongst us will notice both of these posts have the quoted text before a ” RT @” pattern- so they come with a RT tag followed by the username of the person they’re retweeting followed by the original tweet.</p>
+<p>Now let’s mutate a new column and name it <code>rt_info</code>. This will check if the post is a RT, and if it is, take the RT tag and the proceeding text and add it to a new column.</p>
+<p>Then in the next mutate we’ll edit our <code>text</code> column, checking if each post is a RT, and if it is we’ll extract all the text up to the RT tag and forget about the rest - which is stored in rt_info:</p>
+<pre class="r"><code>demo_RTs &lt;- demo_RTs  %&gt;%
+  mutate(rt_info = ifelse(str_detect(text, &quot;\\bRT\\b&quot;), str_match(text, &quot;\\bRT\\b @.*&quot;), &quot;emptystring&quot;)) %&gt;%
+  mutate(text = ifelse(str_detect(text, &quot;\\bRT\\b&quot;), str_match(text, &quot;.* \\bRT\\b&quot;), text))
+
+demo_RTs</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   text                                                                   rt_info
+##   &lt;chr&gt;                                                                  &lt;chr&gt;  
+## 1 Se mamaron con los precios yo con un kilo de arroz y una bolsa pan de… RT @jo…
+## 2 ¡Uy, qué miedo! ¿Dónde ha estado desde diciembre de 2018? Yo me acuer… RT @re…</code></pre>
+<p>Now we can see that our <code>text</code> column has two posts, each of them quoted RTs, and our <code>rt_info</code> column includes all information relating to the RT itself. Now we can analyse the quoted RTs, and the original tweets’ information if need be.</p>
+<p>🚨<strong>Note leaving the “RT” at the end of the quoted RTs is intentional, so that posts can still be tracked easily as quote RTs, and in the topic modelling process we’ll still see that the topic comprises a number of quote RTs, but can be removed with mutate <code>(text = str_remove_all(text, "\\bRT\\b"))</code></strong>🚨</p>
+</div>
