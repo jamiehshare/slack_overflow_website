@@ -28,7 +28,7 @@ Quite often, we might have data spread across multiple files. This could be mult
 
 R will always need to know the exact names of the files you are trying to read in. You could sit there an copy and paste the file names, but what if you had 20+ files? It's not very efficient. Instead, let R do the hard work for you and find the names itself.
 
-Let's look at the recent Adidas pitch data. There were only two files, but this principle will work no matter how many there are. First, we update are working directory so R knows where the files are saved. Then, as we know all of our files are csvs, we ask are to create an object called `paths` which is a list of all the csv files in the directory.
+Let's look at the recent Adidas pitch data. There were only two files, but this principle will work no matter how many there are. First, we update our working directory so R knows where the files are saved. Then, as we know all of our files are csvs, we ask R to create an object called `paths` which is a list of all the csv files in the directory.
 
 ```{r setwd}
 setwd("/Volumes/GoogleDrive/My Drive/Share_Clients/Data Science Project Work/Slack Overflow/reading_multiple_files/data")
