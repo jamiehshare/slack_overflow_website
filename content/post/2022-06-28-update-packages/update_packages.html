@@ -2,7 +2,7 @@
 title: "Updating Packages"
 author: "Jamie Hudson, Data Scientist"
 date: "2022-06-28"
-categories: [""]
+categories: ["ParseR", "SegmentR", "ConnectR", "HelpR"]
 tags: ["packages", "update", "install.packages"]
 output:
   html_document:
@@ -32,7 +32,7 @@ output:
 </div>
 <div id="using-the-r-package-manager" class="section level2">
 <h2>Using the R Package Manager</h2>
-<p>An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right hand corner), there is an “<em>Update</em>” button, which you can click to give you a list of packages that are ready to be updated.</p>
+<p>An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right-hand corner), there is an “<em>Update</em>” button, which you can click to give you a list of packages that are ready to be updated.</p>
 <center>
 <img src="/update_packages.png" style="width:70.0%" />
 </center>
@@ -40,11 +40,11 @@ output:
 <center>
 <img src="/update_packages_2.png" style="width:70.0%" />
 </center>
-<p>We will then normally be told that R will be restarted during this process. This is <strong><em>normally</em></strong> okay and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe.</p>
+<p>We will then normally be told that R will be restarted during this process. This is <strong><em>normally</em></strong> okay, and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe.</p>
 </div>
 <div id="to-update-share-packages" class="section level2">
 <h2>To update Share packages</h2>
-<p>To update the Share packages we can’t use the Packages pane (as they are hosted privately for us). Therefore to update these packages as and when required (<em>The DS team will put out a message advising updating when appropriate</em>), we run the same code we originally used to install them in the first place.</p>
+<p>To update the Share packages we can’t use the Packages pane (as they are hosted privately for us). Therefore, to update these packages as and when required (<em>The DS team will put out a message advising updating when appropriate</em>), we run the same code we originally used to install them in the first place.</p>
 <pre class="r"><code>devtools::install_github(repo = &quot;Avery-Island/ParseR&quot;,
                          auth_token = &quot;let_me_in_please&quot;,
                          force = TRUE)

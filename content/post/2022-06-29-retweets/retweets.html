@@ -19,7 +19,7 @@ output:
 </div>
 <div id="the-problem" class="section level2">
 <h2>The Problem</h2>
-<p>🚨<strong>Note this is only relevant to data that has not come from Sprinklr. Quoted retweet’s are classified as mentions in sprinklr and only simple retweets are considered retweets</strong>🚨</p>
+<p>🚨<strong>Note this is only relevant to data that has not come from Sprinklr. Quoted retweet’s are classified as mentions in Sprinklr and only simple retweets are considered retweets</strong>🚨</p>
 <p>When creating bigram networks and performing topic modelling on Twitter data it can often be difficult to deal with retweets (RTs).</p>
 <p>If we leave all RTs in the data set, the bigram networks will comprise only the most retweeted RTs, as will most of the topics inferred through topic modelling.</p>
 <p>However, if we blanket remove all RTs, we will also lose the quote RTs, which contain text separate from the RT.</p>
@@ -31,11 +31,11 @@ output:
 <p>First things first, let’s load the libraries we will be using:</p>
 <pre class="r"><code>library(tidyverse)
 library(janitor)</code></pre>
-<p>And then load in some sample data, which we will call <code>demo</code>. You will see I also select only a few columns, this is for clarity in visualising the dataframe in this tutorial and we do not recommend selecting such few columns for a real-life situation.</p>
+<p>And then load in some sample data, which we will call <code>demo</code>. You will see I also select only a few columns, this is for clarity in visualising the data frame in this tutorial and we do not recommend selecting such few columns for a real-life situation.</p>
 <pre class="r"><code>demo &lt;- read_csv(&quot;data/demo.csv&quot;) %&gt;%
-  clean_names() %&gt;%
-  select(date, media_type, publisher_username, mention_content)
-  head(20)</code></pre>
+  janitor::clean_names() %&gt;%
+  dplyr::select(date, media_type, publisher_username, mention_content)
+  utils::head(20)</code></pre>
 <pre><code>## [1] 20</code></pre>
 <pre class="r"><code>head(demo)</code></pre>
 <pre><code>## # A tibble: 6 × 4
@@ -49,9 +49,9 @@ library(janitor)</code></pre>
 ## 6 2022-06-02 Twitter    nathmarz           A punto de morir por comer unas puta…</code></pre>
 <p>In this example, we can see that our text variable is stored in a column called <code>mention_content</code>. For illustrative purposes, let’s rename this to <code>text</code> and then find us some RTs:</p>
 <pre class="r"><code>demo_RTs &lt;- demo %&gt;%
-  rename(text = mention_content) %&gt;%
-  select(text) %&gt;%
-  filter(str_detect(text, &quot;\\bRT\\b&quot;))</code></pre>
+  dplyr::rename(text = mention_content) %&gt;%
+  dplyr::select(text) %&gt;%
+  dplyr::filter(str_detect(text, &quot;\\bRT\\b&quot;))</code></pre>
 <p>We use the function <code>str_detect()</code> to search for strings within the <code>text</code> column that match the regex pattern <code>"\\bRT\\b</code>. This pattern tells R to find the term “RT” before and after word boundaries (the transition between word and non-word characters), meaning we will not find words such as “FURTHER”, as the “RT” is not next to a word boundary.</p>
 <p>By viewing <code>demo_RTs</code>, we can see we have two posts that match the filtering criteria:</p>
 <pre class="r"><code>demo_RTs</code></pre>

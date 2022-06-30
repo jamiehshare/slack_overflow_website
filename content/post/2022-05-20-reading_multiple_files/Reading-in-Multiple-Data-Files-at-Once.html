@@ -23,8 +23,8 @@ output:
 </div>
 <div id="extracting-the-names" class="section level2">
 <h2>Extracting the names</h2>
-<p>R will always need to know the exact names of the files you are trying to read in. You could sit there an copy and paste the file names, but what if you had 20+ files? It’s not very efficient. Instead, let R do the hard work for you and find the names itself.</p>
-<p>Let’s look at the recent Adidas pitch data. There were only two files, but this principle will work no matter how many there are. First, we update are working directory so R knows where the files are saved. Then, as we know all of our files are csvs, we ask are to create an object called <code>paths</code> which is a list of all the csv files in the directory.</p>
+<p>R will always need to know the exact names of the files you are trying to read in. You could sit there and copy and paste the file names, but what if you had 20+ files? It’s not very efficient. Instead, let R do the hard work for you and find the names itself.</p>
+<p>Let’s look at the recent Adidas pitch data. There were only two files, but this principle will work no matter how many there are. First, we update our working directory so R knows where the files are saved. Then, as we know all our files are CSVs, we ask R to create an object called <code>paths</code> which is a list of all the CSV files in the directory.</p>
 <pre class="r"><code>setwd(&quot;/Volumes/GoogleDrive/My Drive/Share_Clients/Data Science Project Work/Slack Overflow/reading_multiple_files/data&quot;)
 
 paths &lt;- list.files(pattern = &quot;csv$&quot;, recursive = TRUE)
@@ -35,9 +35,9 @@ paths</code></pre>
 <div id="using-map-to-call-the-same-function-on-multiple-objects" class="section level2">
 <h2>Using map() to call the same function on multiple objects</h2>
 <p><code>map()</code> is a special function that allows you to conduct another function over multiple objects at the same time. When you think about it, it’s exactly the kind of thing we need here. We need to call <code>read_csv()</code> multiple times and <code>map()</code> is going to save us so much time by doing all of those processes at once. The code to do so is very simple:</p>
-<pre class="r"><code>all_docs &lt;- map(paths, read_csv)</code></pre>
-<p>R has created an object called <code>all_docs</code> which is the result reading in all the csvs. Great! We aren’t quite there though because at the moment, whilst all the data is in our R environment, they are living as separate objects in that list. We need to bind them all together. For that, we can use a <code>full_join()</code></p>
-<pre class="r"><code>data &lt;- reduce(all_docs, full_join)</code></pre>
+<pre class="r"><code>all_docs &lt;- purrr::map(paths, read_csv)</code></pre>
+<p>R has created an object called <code>all_docs</code> which is the result reading in all the CSVs. Great! We aren’t quite there though because at the moment, whilst all the data is in our R environment, they are living as separate objects in that list. We need to bind them all together. For that, we can use a <code>full_join()</code></p>
+<pre class="r"><code>data &lt;- purrr:::reduce(all_docs, full_join)</code></pre>
 <pre><code>## Joining, by = c(&quot;date&quot;, &quot;text&quot;, &quot;title&quot;, &quot;permalink&quot;, &quot;site name&quot;, &quot;queries&quot;,
 ## &quot;lang&quot;, &quot;tone&quot;, &quot;emotion(s)&quot;, &quot;platform&quot;, &quot;post type&quot;, &quot;source name&quot;, &quot;author&quot;,
 ## &quot;screen name&quot;, &quot;gender&quot;, &quot;avatar&quot;, &quot;verified author account&quot;, &quot;inferred
@@ -101,5 +101,5 @@ paths</code></pre>
 ## #   `inferred longitude` &lt;dbl&gt;, `inferred latitude` &lt;dbl&gt;,
 ## #   `inferred country population` &lt;dbl&gt;, `inferred region population` &lt;dbl&gt;,
 ## #   `inferred city population` &lt;dbl&gt;, `declared country` &lt;chr&gt;, …</code></pre>
-<p>So there were are - all the data exports loaded in and bound into one object quickly and efficiently!</p>
+<p>So, there were are - all the data exports loaded in and bound into one object quickly and efficiently!</p>
 </div>

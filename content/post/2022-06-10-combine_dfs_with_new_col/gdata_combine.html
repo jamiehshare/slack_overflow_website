@@ -58,7 +58,7 @@ google_mutated &lt;- google %&gt;%
   dplyr::mutate(source = &quot;google&quot;)
 
 combined_df &lt;- dplyr::bind_rows(amazon_mutated, microsoft_mutated, google_mutated)</code></pre>
-<p>Here, we used <code>dplyr::mutate()</code> to create a new column called <code>source</code>, which we labelled with the name of each data frame, before binding using <code>dplyr::bind_rows()</code> to produce our new data frame called <code>combined_df</code>. We can view what this dataframe looks like, with our new <code>source</code> column:</p>
+<p>Here, we used <code>dplyr::mutate()</code> to create a new column called <code>source</code>, which we labelled with the name of each data frame, before binding using <code>dplyr::bind_rows()</code> to produce our new data frame called <code>combined_df</code>. We can view what this data frame looks like, with our new <code>source</code> column:</p>
 <pre class="r"><code>head(combined_df)</code></pre>
 <pre><code>## # A tibble: 6 × 4
 ##   message_id message                                               author source

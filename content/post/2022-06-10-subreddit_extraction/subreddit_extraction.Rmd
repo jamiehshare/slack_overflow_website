@@ -25,7 +25,7 @@ library(readr)
 
 ## The problem
 
-Sometimes we might received data from a social listening ouput and we want to be able to filter for subreddits of interest.
+Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.
 
 ```{r, echo=F}
 data <- read_rds(here("~/Google Drive/My Drive/Data Science Project Work/Microsoft/Project Work/503_semiotics_of_tech_love/data/rds_files/503_df.rds"))

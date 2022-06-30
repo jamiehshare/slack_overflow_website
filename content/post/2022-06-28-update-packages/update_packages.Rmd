@@ -42,7 +42,7 @@ install.packages("ggplot2")
 
 ## Using the R Package Manager
 
-An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right hand corner), there is an "*Update*" button, which you can click to give you a list of packages that are ready to be updated. 
+An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right-hand corner), there is an "*Update*" button, which you can click to give you a list of packages that are ready to be updated. 
 
 <center>
 ![](/update_packages.png){width=70%}
@@ -54,11 +54,11 @@ From there, we can click "*Select All*" and click "*Install Updates*".
 ![](/update_packages_2.png){width=70%}
 </center>
 
-We will then normally be told that R will be restarted during this process. This is ***normally*** okay and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe. 
+We will then normally be told that R will be restarted during this process. This is ***normally*** okay, and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe. 
 
 ## To update Share packages
 
-To update the Share packages we can't use the Packages pane (as they are hosted privately for us). Therefore to update these packages as and when required (*The DS team will put out a message advising updating when appropriate*), we run the same code we originally used to install them in the first place.
+To update the Share packages we can't use the Packages pane (as they are hosted privately for us). Therefore, to update these packages as and when required (*The DS team will put out a message advising updating when appropriate*), we run the same code we originally used to install them in the first place.
 
 ```{r, eval=F}
 devtools::install_github(repo = "Avery-Island/ParseR",

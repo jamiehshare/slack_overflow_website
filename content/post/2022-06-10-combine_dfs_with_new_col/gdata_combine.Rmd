@@ -73,7 +73,7 @@ google_mutated <- google %>%
 combined_df <- dplyr::bind_rows(amazon_mutated, microsoft_mutated, google_mutated)
 ```
 
-Here, we used `dplyr::mutate()` to create a new column called `source`, which we labelled with the name of each data frame, before binding using `dplyr::bind_rows()` to produce our new data frame called `combined_df`. We can view what this dataframe looks like, with our new `source` column:
+Here, we used `dplyr::mutate()` to create a new column called `source`, which we labelled with the name of each data frame, before binding using `dplyr::bind_rows()` to produce our new data frame called `combined_df`. We can view what this data frame looks like, with our new `source` column:
 
 ```{r}
 head(combined_df)

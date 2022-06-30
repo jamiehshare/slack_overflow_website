@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## The Problem
 
-🚨**Note this is only relevant to data that has not come from Sprinklr. Quoted retweet's are classified as mentions in sprinklr and only simple retweets are considered retweets**🚨
+🚨**Note this is only relevant to data that has not come from Sprinklr. Quoted retweet's are classified as mentions in Sprinklr and only simple retweets are considered retweets**🚨
 
 When creating bigram networks and performing topic modelling on Twitter data it can often be difficult to deal with retweets (RTs).
 
@@ -40,12 +40,12 @@ library(tidyverse)
 library(janitor)
 ```
 
-And then load in some sample data, which we will call `demo`. You will see I also select only a few columns, this is for clarity in visualising the dataframe in this tutorial and we do not recommend selecting such few columns for a real-life situation.
+And then load in some sample data, which we will call `demo`. You will see I also select only a few columns, this is for clarity in visualising the data frame in this tutorial and we do not recommend selecting such few columns for a real-life situation.
 ```{r, message = F}
 demo <- read_csv("data/demo.csv") %>%
-  clean_names() %>%
-  select(date, media_type, publisher_username, mention_content)
-  head(20)
+  janitor::clean_names() %>%
+  dplyr::select(date, media_type, publisher_username, mention_content)
+  utils::head(20)
 
 head(demo)
 ```
@@ -53,9 +53,9 @@ head(demo)
 In this example, we can see that our text variable is stored in a column called `mention_content`. For illustrative purposes, let's rename this to `text` and then find us some RTs:
 ```{r}
 demo_RTs <- demo %>%
-  rename(text = mention_content) %>%
-  select(text) %>%
-  filter(str_detect(text, "\\bRT\\b"))
+  dplyr::rename(text = mention_content) %>%
+  dplyr::select(text) %>%
+  dplyr::filter(str_detect(text, "\\bRT\\b"))
 ```
 
 We use the function `str_detect()` to search for strings within the `text` column that match the regex pattern `"\\bRT\\b`. This pattern tells R to find the term "RT" before and after word boundaries (the transition between word and non-word characters), meaning we will not find words such as "FURTHER", as the "RT" is not next to a word boundary.
