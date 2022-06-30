@@ -21,7 +21,7 @@ library(here)
 library(readr)
 ```
 
-#### *Answer originally provided by Jack Penzer, Data Scientist*
+#### *Topic originally suggested by Jack Penzer, Data Scientist*
 
 ## The problem
 
