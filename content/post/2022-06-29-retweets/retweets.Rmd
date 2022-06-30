@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## The Problem
 
-🚨**Note this is only relevant to data that has not come from Sprinklr. Quoted retweet's are classified as mentions in Sprinklr and only simple retweets are considered retweets**🚨
+🚨**Note this is only relevant to data that has not come from Sprinklr. Quoted retweets are classified as mentions in Sprinklr and only simple retweets are considered retweets**🚨
 
 When creating bigram networks and performing topic modelling on Twitter data it can often be difficult to deal with retweets (RTs).
 
