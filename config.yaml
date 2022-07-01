@@ -25,10 +25,10 @@ params:
     text: "Slack Overflow"
     icon: /logo.png
     iconHeight: 50 
-    
-marketing:
-  analytics:
-    google_analytics: 'G-FVMR4JGPJB'
+
+googleAnalytics: UA-233404530-1
+
+
   
     
   ShowReadingTime: true
