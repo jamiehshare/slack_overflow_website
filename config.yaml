@@ -2,6 +2,9 @@ theme: "hugo-PaperMod"
 baseURL: "https://slack-overflow-help.netlify.app/"
 languageCode: en-gb
 title: Slack Overflow tips & tricks
+
+googleAnalytics: UA-233404530-1
+
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   author: Jamie Hudson
@@ -26,10 +29,6 @@ params:
     icon: /logo.png
     iconHeight: 50 
 
-googleAnalytics: UA-233404530-1
-
-
-  
     
   ShowReadingTime: true
   ShowShareButtons: false
