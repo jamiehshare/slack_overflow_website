@@ -57,9 +57,12 @@ params:
 
           See below for the most recent documentation 👇. 
           
-          
 menu:
   main:
+    - identifier: Share_packages
+      name: SHARE package docs
+      url: /share_packages/
+      weight: 5
     - identifier: R_packages
       name: R packages
       url: /categories/
