@@ -1,7 +1,7 @@
 ---
 title: "Change text size of SegmentR plots"
 author: "Jamie Hudson, Data Scientist"
-date: "2023-01-14"
+date: "2023-02-14"
 categories: ["tidyverse", "ggplot2", "segmentr"]
 tags: ["ggplot2", "ggsave", "figures"]
 output:
