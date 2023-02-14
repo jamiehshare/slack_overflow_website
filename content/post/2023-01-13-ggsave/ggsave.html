@@ -30,7 +30,7 @@ output:
 </div>
 <div id="the-solution" class="section level2">
 <h2>The Solution</h2>
-<p>The best way to get around this is to use the <code>ggsave()</code> function from the <code>ggplot2</code> library.</p>
+<p>The way to get around this is via the <code>ggsave()</code> function from the <code>ggplot2</code> library.</p>
 <p>This function is super convenient and by default saves the last plot that you have displayed in the Plot pane. It also guesses the type of graphics device from the extension of the saved image.</p>
 <p>The function works like:</p>
 <pre class="r"><code>ggsave(filename = &quot;CHANGE_NAME_TO_SOMETHING_SUITABLE.png&quot;,      
@@ -39,12 +39,11 @@ output:
        width = 8)</code></pre>
 <p>where height = 6 and width = 8 tend to be good values to use, and means every plot produced using this code will be the same size ( 6 x 8 ) and makes for nice consistent sizing for decks. As mentioned, by default this function saves the last produced plot (i.e. the one in the Plot pane of RStudio if you have just ran some code to make a plot).</p>
 </div>
-<div id="but-wait-theres-more" class="section level2">
-<h2><em>But wait, there’s more</em></h2>
+<div id="but-wait-theres-more" class="section level1">
+<h1><em>But wait, there’s more</em></h1>
 <p>Jack’s produced a neat wrapper function that currently sits in the <code>JPackage</code> library called <code>plot_save()</code>. This function has appropriate defaults for height, width and plot resolution (dpi), so unless we explicitly want these to change, we can just ignore them from the function.</p>
 <p>Therefore to use this function to save a plot, all we need to do is provide the filepath of the location we want to save the plot, with the name of the plot. For example:</p>
 <pre class="r"><code>JPackage::plot_save(filename = &quot;drive/folder/project/viz/CHANGE_NAME_TO_SOMETHING_SUITABLE.png&quot;)</code></pre>
-</div>
 <div id="bonus-tip" class="section level2">
 <h2>🎁 Bonus Tip 🎁</h2>
 <p>Now, this works great for when we create and want to save a single plot. But for some of the workflows, we produce multiple plots at once (for example the bigrams during LDA topic modelling).</p>
@@ -78,4 +77,5 @@ output:
 <li><p><code>filename = paste0("drive/folder/project/viz/bigrams_", x, ".png")</code> creates a file name for the saved plot abd saves these to the <code>drive/folder/project/viz/</code> folder (which should be changed to something suitable) and names each bigram in this folder <code>bigram_THE_NAME_OF_THE_BIGRAM.png</code>.</p></li>
 <li><p><code>plot = bigrams[[x]]</code> specifies the plot to be saved. The [[x]] notation retrieves the element of the bigrams list with name x. Again, if the bigram list has a different name, it should be changed here too (i.e. <code>plot = DIFFERENT_NAME[[x]]</code>).</p></li>
 </ul>
+</div>
 </div>

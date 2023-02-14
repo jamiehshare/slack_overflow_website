@@ -32,7 +32,7 @@ If plots are saved using the Plots panel by clicking `Export` and `Save as image
 
 ## The Solution
 
-The best way to get around this is to use the `ggsave()` function from the `ggplot2` library.
+The way to get around this is via the `ggsave()` function from the `ggplot2` library.
 
 This function is super convenient and by default saves the last plot that you have displayed in the Plot pane. It also guesses the type of graphics device from the extension of the saved image. 
 
@@ -47,7 +47,7 @@ ggsave(filename = "CHANGE_NAME_TO_SOMETHING_SUITABLE.png",
 
 where height = 6 and width = 8 tend to be good values to use, and means every plot produced using this code will be the same size ( 6 x 8 ) and makes for nice consistent sizing for decks. As mentioned, by default this function saves the last produced plot (i.e. the one in the Plot pane of RStudio if you have just ran some code to make a plot).
  
-## *But wait, there's more*
+# *But wait, there's more*
 
 Jack's produced a neat wrapper function that currently sits in the `JPackage` library called `plot_save()`. This function has appropriate defaults for height, width and plot resolution (dpi), so unless we explicitly want these to change, we can just ignore them from the function.
 
