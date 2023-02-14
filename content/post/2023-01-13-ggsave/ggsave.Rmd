@@ -57,6 +57,16 @@ Therefore to use this function to save a plot, all we need to do is provide the 
 JPackage::plot_save(filename = "drive/folder/project/viz/CHANGE_NAME_TO_SOMETHING_SUITABLE.png")
 ```
 
+Sometimes though, the default size of `JPackage::plot_save()` just won't do. For example, you may have many topics from topic modelling and the top term plots all look a bit squished when they're saved. In this case, you can try increasing the height and width of the plot by including those arguments such as:
+
+```{r, eval=FALSE}
+JPackage::plot_save(filename = "drive/folder/project/viz/CHANGE_NAME_TO_SOMETHING_SUITABLE.png",
+                    height = 9,
+                    width = 12)
+```
+
+You have to play around with these values until you get a size of plot that is appropriate, 💡 but remember to make all of the similar kind of plots the same size for deck/project consistency. 💡
+
 ## 🎁 Bonus Tip 🎁
 
 Now, this works great for when we create and want to save a single plot. But for some of the workflows, we produce multiple plots at once (for example the bigrams during LDA topic modelling).

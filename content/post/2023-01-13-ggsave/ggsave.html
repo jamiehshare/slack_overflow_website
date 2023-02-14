@@ -44,6 +44,11 @@ output:
 <p>Jack’s produced a neat wrapper function that currently sits in the <code>JPackage</code> library called <code>plot_save()</code>. This function has appropriate defaults for height, width and plot resolution (dpi), so unless we explicitly want these to change, we can just ignore them from the function.</p>
 <p>Therefore to use this function to save a plot, all we need to do is provide the filepath of the location we want to save the plot, with the name of the plot. For example:</p>
 <pre class="r"><code>JPackage::plot_save(filename = &quot;drive/folder/project/viz/CHANGE_NAME_TO_SOMETHING_SUITABLE.png&quot;)</code></pre>
+<p>Sometimes though, the default size of <code>JPackage::plot_save()</code> just won’t do. For example, you may have many topics from topic modelling and the top term plots all look a bit squished when they’re saved. In this case, you can try increasing the height and width of the plot by including those arguments such as:</p>
+<pre class="r"><code>JPackage::plot_save(filename = &quot;drive/folder/project/viz/CHANGE_NAME_TO_SOMETHING_SUITABLE.png&quot;,
+                    height = 9,
+                    width = 12)</code></pre>
+<p>You have to play around with these values until you get a size of plot that is appropriate, 💡 but remember to make all of the similar kind of plots the same size for deck/project consistency. 💡</p>
 <div id="bonus-tip" class="section level2">
 <h2>🎁 Bonus Tip 🎁</h2>
 <p>Now, this works great for when we create and want to save a single plot. But for some of the workflows, we produce multiple plots at once (for example the bigrams during LDA topic modelling).</p>
