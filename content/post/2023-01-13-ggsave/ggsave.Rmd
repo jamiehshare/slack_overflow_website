@@ -1,0 +1,116 @@
+---
+title: "Consistently Save Plots"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-29"
+categories: ["tidyverse", "ggplot2"]
+tags: ["ggplot2", "ggsave", "figures"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### *Answers originally suggested by Jamie Hudson, Data Scientist and Jack Penzer, Senior Data Scientist*
+
+## The Problem
+
+It is important to be able to export/save the figures created in R in a consistent manner, so that throughout a deck all plots of a similar type (e.g. all bigrams) are the same size and resolution.
+
+If plots are saved using the Plots panel by clicking `Export` and `Save as image`, it is very easy to accidentally save plots as different sizes (and you cannot alter the resolution from the default value).
+
+<center>
+
+![*Save Panel in RStudio*](../img/save_panel.png)
+
+</center>
+
+## The Solution
+
+The best way to get around this is to use the `ggsave()` function from the `ggplot2` library.
+
+This function is super convenient and by default saves the last plot that you have displayed in the Plot pane. It also guesses the type of graphics device from the extension of the saved image. 
+
+The function works like:
+
+```{r, eval=FALSE}
+ggsave(filename = "CHANGE_NAME_TO_SOMETHING_SUITABLE.png",      
+       bg = "white",
+       height = 6,
+       width = 8)
+```
+
+where height = 6 and width = 8 tend to be good values to use, and means every plot produced using this code will be the same size ( 6 x 8 ) and makes for nice consistent sizing for decks. As mentioned, by default this function saves the last produced plot (i.e. the one in the Plot pane of RStudio if you have just ran some code to make a plot).
+ 
+## *But wait, there's more*
+
+Jack's produced a neat wrapper function that currently sits in the `JPackage` library called `plot_save()`. This function has appropriate defaults for height, width and plot resolution (dpi), so unless we explicitly want these to change, we can just ignore them from the function.
+
+Therefore to use this function to save a plot, all we need to do is provide the filepath of the location we want to save the plot, with the name of the plot. For example:
+
+```{r, eval=FALSE}
+JPackage::plot_save(filename = "drive/folder/project/viz/CHANGE_NAME_TO_SOMETHING_SUITABLE.png")
+```
+
+## 🎁 Bonus Tip 🎁
+
+Now, this works great for when we create and want to save a single plot. But for some of the workflows, we produce multiple plots at once (for example the bigrams during LDA topic modelling).
+
+To perform this, we need to do some slightly more complex coding which applies a function (i.e. `JPackage::plot_save()`) across a list or a vector. To show this, let's pluck the bigrams from an LDA workflow:
+
+```{r eval=FALSE}
+bigrams <- ldas %>%
+  filter(k == 5, freq_cutoff == 200) %>% 
+  SegmentR::explore_LDAs(top_terms = FALSE,
+                         diff_terms = FALSE,
+                         bigrams = TRUE,
+                         bigram_n = 25,
+                         exemplars = FALSE) %>%
+  pluck('bigrams', 1)
+```
+
+This creates a list of the (in this case 5 [because we have filtered for `k == 5`]) bigrams. Each of these bigrams has a name, and what we can do is append perhaps the value of K onto each of these names using the following code:
+
+```{r eval=FALSE}
+k_val <- 5 # assign a numeric vector called k_val the value of 5
+```
+
+We can view the current names of the bigrams
+```{r eval=FALSE}
+names(bigrams)
+```
+
+And then rename them with the appended k value:
+
+```{r eval=FALSE}
+names(bigrams) <- paste0(names(bigrams), "_", "k", "_", k_val) 
+```
+
+Now we can apply `JPackage::plot_save()` to the list of bigrams using the function `lapply()`. 
+```{r eval=FALSE}
+lapply(names(bigrams),
+       function(x) JPackage::plot_save(
+         dir = paste0("drive/folder/project/viz/bigrams_", x, ".png"), 
+         plot = bigrams[[x]]
+         )
+       )
+```
+
+What each of these lines does is:
+
+- `lapply(names(bigrams)` starts a loop that will iterate over the names of the objects in the bigrams list. Note, that if your bigrams list has a different name, it should be changed here too (i.e. `lapply(names(DIFFERENT_NAME))`).
+
+- `function(x)` is what is known as an anonymous function which takes a single argument known as `x`, which in this case is an individual name from the bigram list.
+
+- `JPackage::plot_save` is the function that is called to save the plots
+
+- `filename = paste0("drive/folder/project/viz/bigrams_", x, ".png")` creates a file name for the saved plot abd saves these to the `drive/folder/project/viz/` folder (which should be changed to something suitable) and names each bigram in this folder `bigram_THE_NAME_OF_THE_BIGRAM.png`.
+
+- `plot = bigrams[[x]]` specifies the plot to be saved. The [[x]] notation retrieves the element of the bigrams list with name x. Again, if the bigram list has a different name, it should be changed here too (i.e. `plot = DIFFERENT_NAME[[x]]`).
+
+
