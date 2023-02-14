@@ -1,0 +1,108 @@
+---
+title: "Change text size of SegmentR plots"
+author: "Jamie Hudson, Data Scientist"
+date: "2022-06-29"
+categories: ["tidyverse", "ggplot2", "segmentr"]
+tags: ["ggplot2", "ggsave", "figures"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+
+
+<div id="answer-originally-suggested-by-jack-penzer-senior-data-scientist" class="section level4">
+<h4><em>Answer originally suggested by Jack Penzer, Senior Data Scientist</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).</p>
+<p>Let’s use the example ‘Top Terms’ plot from the <a href="https://avery-island.github.io/SegmentR/articles/1_topic_modelling.html">SegmentR documentation</a> to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of <code>min_freq</code>, <code>k_opts</code> etc here because this is just for demonstration- we <strong>must</strong> try different values for project work)</p>
+<pre class="r"><code>sprinklr_export &lt;- SegmentR::sprinklr_export %&gt;%
+  filter(!str_detect(Message, &quot;A word of advice\\?&quot;))
+
+dtms &lt;- sprinklr_export %&gt;%
+  SegmentR::make_DTMs(text_var = Message,
+                      min_freq = 10,
+                      hashtags = FALSE,
+                      mentions = FALSE,
+                      clean_text = TRUE,
+                      remove_stops = TRUE)
+
+ldas &lt;- dtms %&gt;%
+  SegmentR::fit_LDAs(k_opts = 3,
+                     iter_opts = 1000)
+
+explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE)</code></pre>
+<p>Now, we can view this plot by <code>pull</code>ing the top_terms and <code>pluck</code>ing “all_terms” (again, this is all explained in the <a href="https://avery-island.github.io/SegmentR/articles/1_topic_modelling.html">SegmentR documentation</a>)</p>
+<pre class="r"><code>explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;)</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can see that all of the text on the y axis (the top terms for each topic) is a tad squished and doesn’t look the best.</p>
+</div>
+<div id="the-solution" class="section level2">
+<h2>The Solution</h2>
+<p>There are a few different solutions which can be tried to fix this problem. The first is to save the plot using <code>JPackage::plot_save()</code> with larger dimensions. Please read the Slack Overflow page for this <a href="https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/">here</a>.</p>
+<p>If this doesn’t work, we can manipulate the plot by either :
+1) reducing the number of terms shown,
+2) laying out the plots on only one row,
+3) or reducing the font size</p>
+<p>Let’s look at these solutions one by one.</p>
+<ol style="list-style-type: decimal">
+<li>To reduce the number of terms shown, we need to go back to our <code>SegmentR::explore_LDAs()</code> function. There is an argument here, <code>top_n</code>, which determines how many terms per topic we visualise. For a full list of potential arguments, you can type <code>?SegmentR::explore_LDAs</code> to access and read the documentation. Let’s change this argument to 15 and see if this helps (note as seen in the documentation, the default value for this is 20):</li>
+</ol>
+<pre class="r"><code>explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE,
+                         top_n = 15)
+
+explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;)</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Et voilá, you can see that now we have reduced the number of terms, there is nice white space between the bars and the text isn’t so squished.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>We can also use the <code>SegmentR::explore_LDAs</code> to force the plot to appear in one row (rather than facetting the plot into two rows of charts, as it is currently doing). Again, this is controlled by the argument <code>nrow</code> and we can assign this to be equal to <code>1</code>:</li>
+</ol>
+<pre class="r"><code>explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE,
+                         nrow = 1)
+
+explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;)</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>As we are not forcing the plots on two rows, the stretch out vertically a bit more now.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Finally, we can edit the size of the text specifically. In contrast to the previous two solutions, we do not do this via the <code>SegmentR::explore_LDAs</code> function, but rather explicitaly set this when pulling the plot from the <code>explore</code> object. We do this by providing the <code>ggplot2</code> function <code>theme()</code> to our code. Within <code>theme()</code> we can specify the argument <code>axis.text.y</code> to be equal to <code>element_text(size = 8)</code>. Play around with this size (larger numbers = larger text) until you are happy. Note that this can also be used to specify the size of the x axis text with the argument <code>axis.text.y</code>. As always though, if you end up changing the size of the axis text in one plot, be considerate as to whether other plots also need to be changed for consistency.</li>
+</ol>
+<pre class="r"><code>explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE)
+
+explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;) +
+  theme(axis.text.y = element_text(size = 8))</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>And there you go, there are some potential solutions to helping clean up some plots that have been made in SegmentR.</p>
+</div>
