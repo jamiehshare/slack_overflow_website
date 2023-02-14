@@ -129,4 +129,4 @@ explore %>%
   theme(axis.text.y = element_text(size = 8))
 ```
 
-And there you go, there are some potential solutions to helping clean up some plots that have been made in SegmentR.
+And there you go, these are some potential solutions to helping clean up some plots that have been made in SegmentR.
