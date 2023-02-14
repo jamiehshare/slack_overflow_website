@@ -67,16 +67,20 @@ We can see that all of the text on the y axis (the top terms for each topic) is 
 
 ## The Solution
 
-There are a few different solutions which can be tried to fix this problem. The first is to save the plot using `JPackage::plot_save()` with larger dimensions. Please read the Slack Overflow page for this [here](https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/).
+There are a few different solutions which can be tried to fix this problem. The first is to save the plot using `JPackage::plot_save()` with larger dimensions. Please read the Slack Overflow page for this [here](https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/) to see the code and rationale behind this.
 
-If this doesn't work, we can manipulate the plot by either :
+If this doesn't work, or if we want a different solution we can manipulate the plot by either:
   1) reducing the number of terms shown, 
   2) laying out the plots on only one row,
-  3) or reducing the font size
+  3) reducing the font size
 
 Let's look at these solutions one by one.
 
-1) To reduce the number of terms shown, we need to go back to our `SegmentR::explore_LDAs()` function. There is an argument here, `top_n`, which determines how many terms per topic we visualise. For a full list of potential arguments, you can type `?SegmentR::explore_LDAs` to access and read the documentation. Let's change this argument to 15 and see if this helps (note as seen in the documentation, the default value for this is 20):
+1) To reduce the number of terms shown, we need to go back to our `SegmentR::explore_LDAs()` function. There is an argument here, `top_n`, which determines how many terms per topic we visualise. 
+
+For a full list of potential arguments, you can type `?SegmentR::explore_LDAs` to access and read the documentation. 
+
+Let's change this argument to 12 and see if this helps (note as seen in the documentation, the default value for this is 20):
 
 ```{r}
 explore <- ldas %>%
@@ -84,7 +88,7 @@ explore <- ldas %>%
                          diff_terms = TRUE,
                          bigrams = TRUE,
                          exemplars = TRUE,
-                         top_n = 15)
+                         top_n = 12) #Set the number of terms to appear as 12
 
 explore %>%
   filter(freq_cutoff == 10 & k == 3 & iter == 1000) %>%
@@ -92,9 +96,9 @@ explore %>%
   pluck(1, "all_terms")
 ```
 
-Et voilá, you can see that now we have reduced the number of terms, there is nice white space between the bars and the text isn't so squished. 
+Et voilà, you can see that now we have reduced the number of terms, there is nicer white space between the bars and the text isn't so squished. 
 
-2) We can also use the `SegmentR::explore_LDAs` to force the plot to appear in one row (rather than facetting the plot into two rows of charts, as it is currently doing). Again, this is controlled by the argument `nrow` and we can assign this to be equal to `1`:
+2) We can also use the `SegmentR::explore_LDAs` function to force the plot to appear in one row (rather than faceting the plot into two rows of charts, as it is currently doing). Again, this is controlled by the argument `nrow` and we can set this to be equal to `1`:
 
 ```{r}
 explore <- ldas %>%
@@ -102,7 +106,7 @@ explore <- ldas %>%
                          diff_terms = TRUE,
                          bigrams = TRUE,
                          exemplars = TRUE,
-                         nrow = 1)
+                         nrow = 1) #Set the number of rows to be 1
 
 explore %>%
   filter(freq_cutoff == 10 & k == 3 & iter == 1000) %>%
@@ -110,9 +114,9 @@ explore %>%
   pluck(1, "all_terms")
 ```
 
-As we are not forcing the plots on two rows, the stretch out vertically a bit more now.
+As we are not forcing the plots on two rows, the stretch out vertically a bit more now, but certainly do not seem as squashed in this dimension any more.
 
-3) Finally, we can edit the size of the text specifically. In contrast to the previous two solutions, we do not do this via the `SegmentR::explore_LDAs` function, but rather explicitaly set this when pulling the plot from the `explore` object. We do this by providing the `ggplot2` function `theme()` to our code. Within `theme()` we can specify the argument `axis.text.y` to be equal to `element_text(size = 8)`. Play around with this size (larger numbers = larger text) until you are happy. Note that this can also be used to specify the size of the x axis text with the argument `axis.text.y`. As always though, if you end up changing the size of the axis text in one plot, be considerate as to whether other plots also need to be changed for consistency. 
+3) Finally, we can edit the size of the text in question specifically. In contrast to the previous two solutions, we do not do this via the `SegmentR::explore_LDAs` function, but rather explicitly set this when pulling the plot from the `explore` object. We do this by providing the `ggplot2` function `theme()` to our code. Within `theme()` we can specify the argument `axis.text.y` to be equal to `element_text(size = 8)`. Play around with this size (larger numbers = larger text) until you are happy. Note that this can also be used to specify the size of the x axis text with the argument `axis.text.y`. As always though, if you end up changing the size of the axis text in one plot, be considerate as to whether other plots also need to be changed for consistency. 
 
 
 ```{r}
@@ -126,7 +130,7 @@ explore %>%
   filter(freq_cutoff == 10 & k == 3 & iter == 1000) %>%
   pull(top_terms) %>%
   pluck(1, "all_terms") +
-  theme(axis.text.y = element_text(size = 8))
+  theme(axis.text.y = element_text(size = 8)) #Use the theme function to specify the size of the y axis text
 ```
 
-And there you go, these are some potential solutions to helping clean up some plots that have been made in SegmentR.
+And there you go, these are some potential solutions to helping clean up some plots that have been made in SegmentR. Note that these are not mutually exclusive, and we can combine these solutions together (for example displaying 12 terms, on one row, with a smaller font size) if we so wish. 
