@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Reading in Multiple Data Files at Once | Slack Overflow tips &amp; tricks</title>
+<meta name="keywords" content="import_files, load_files">
+<meta name="description" content="Answer originally provided by Mike Tapp, Data Director The Problem Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the map() function.">
+<meta name="author" content="Mike Tapp, Data Director">
+<link rel="canonical" href="https://slack-overflow-help.netlify.app/post/2022-05-20-reading_multiple_files/reading-in-multiple-data-files-at-once/">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-233404530-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-233404530-1');
+</script>
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f5cd59ea56957c99ecadcf027c42b755eddc79842563adbc375b7fcbc8a04dd8.css" integrity="sha256-9c1Z6laVfJnsrc8CfEK3Ve3ceYQlY628N1t/y8igTdg=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://slack-overflow-help.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://slack-overflow-help.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://slack-overflow-help.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://slack-overflow-help.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://slack-overflow-help.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-233404530-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script><meta property="og:title" content="Reading in Multiple Data Files at Once" />
+<meta property="og:description" content="Answer originally provided by Mike Tapp, Data Director The Problem Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the map() function." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://slack-overflow-help.netlify.app/post/2022-05-20-reading_multiple_files/reading-in-multiple-data-files-at-once/" /><meta property="og:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-05-20T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-05-20T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/>
+
+<meta name="twitter:title" content="Reading in Multiple Data Files at Once"/>
+<meta name="twitter:description" content="Answer originally provided by Mike Tapp, Data Director The Problem Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the map() function."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://slack-overflow-help.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Reading in Multiple Data Files at Once",
+      "item": "https://slack-overflow-help.netlify.app/post/2022-05-20-reading_multiple_files/reading-in-multiple-data-files-at-once/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Reading in Multiple Data Files at Once",
+  "name": "Reading in Multiple Data Files at Once",
+  "description": "Answer originally provided by Mike Tapp, Data Director The Problem Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the map() function.",
+  "keywords": [
+    "import_files", "load_files"
+  ],
+  "articleBody": " Answer originally provided by Mike Tapp, Data Director The Problem Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the map() function.\nExtracting the names R will always need to know the exact names of the files you are trying to read in. You could sit there and copy and paste the file names, but what if you had 20+ files? It’s not very efficient. Instead, let R do the hard work for you and find the names itself.\nLet’s look at the recent Adidas pitch data. There were only two files, but this principle will work no matter how many there are. First, we update our working directory so R knows where the files are saved. Then, as we know all our files are CSVs, we ask R to create an object called paths which is a list of all the CSV files in the directory.\nsetwd(\"/Volumes/GoogleDrive/My Drive/Share_Clients/Data Science Project Work/Slack Overflow/reading_multiple_files/data\") paths \u003c- list.files(pattern = \"csv$\", recursive = TRUE) paths ## [1] \"Adidas - Feb - Apr .csv\" \"Adidas - Nov - Jan .csv\" R has correctly identified the two datafiles in the path. Now it’s time to read them in.\nUsing map() to call the same function on multiple objects map() is a special function that allows you to conduct another function over multiple objects at the same time. When you think about it, it’s exactly the kind of thing we need here. We need to call read_csv() multiple times and map() is going to save us so much time by doing all of those processes at once. The code to do so is very simple:\nall_docs \u003c- purrr::map(paths, read_csv) R has created an object called all_docs which is the result reading in all the CSVs. Great! We aren’t quite there though because at the moment, whilst all the data is in our R environment, they are living as separate objects in that list. We need to bind them all together. For that, we can use a full_join()\ndata \u003c- purrr:::reduce(all_docs, full_join) ## Joining, by = c(\"date\", \"text\", \"title\", \"permalink\", \"site name\", \"queries\", ## \"lang\", \"tone\", \"emotion(s)\", \"platform\", \"post type\", \"source name\", \"author\", ## \"screen name\", \"gender\", \"avatar\", \"verified author account\", \"inferred ## country\", \"inferred region\", \"inferred city\", \"inferred longitude\", \"inferred ## latitude\", \"inferred country population\", \"inferred region population\", ## \"inferred city population\", \"declared country\", \"declared region\", \"declared ## city\", \"declared longitude\", \"declared latitude\", \"declared country ## population\", \"declared region population\", \"declared city population\", \"twitter ## author id\", \"twitter followers\", \"twitter retweets\", \"twitter retweed of\", ## \"twitter replies\", \"twitter likes\", \"facebook author id\", \"facebook type\", ## \"facebook fans\", \"facebook likes\", \"facebook shares\", \"facebook comments\", ## \"facebook last update of the likes / shares / comments\", \"instagram author id\", ## \"instagram followers\", \"instagram likes\", \"instagram comments\", \"instagram ## replies\", \"instagram taps back\", \"instagram taps forward\", \"instagram exits\", ## \"impressions (IG numbers)\", \"reach (IG numbers)\", \"instagram last update of the ## likes / comments\", \"pinterest author ID\", \"pinterest followers\", \"pinterest ## saves\", \"pinterest photos\", \"pinterest last update of the saves / photos\", \"web ## pagerank\", \"web inbound links\", \"web shares on twitter\", \"web comments\", ## \"sinaweibo author ID\", \"sinaweibo followers\", \"sinaweibo reposts\", \"sinaweibo ## repost of\", \"sinaweibo likes\", \"sinaweibo comments\", \"wechat author ID\", ## \"wechat wow\", \"wechat likes\", \"wechat reads\", \"wechat last update of the Likes ## / Reads\", \"tiktok author ID\", \"tiktok followers\", \"tiktok views\", \"tiktok ## likes\", \"tiktok shares\", \"tiktok comments\", \"tiktok last update of the views / ## likes / shares / comments\", \"douyin author ID\", \"douyin likes\", \"douyin ## comments\", \"douyin last update of the likes / comments\", \"red likes\", \"red ## comments\", \"red stars\", \"red last update of the likes / comments / stars\", ## \"youtube author ID\", \"youtube views\", \"youtube likes\", \"youtube dislikes\", ## \"youtube comments\", \"youtube favourites\", \"youtube last update of views\", ## \"dailymotion author ID\", \"dailymotion views\", \"dailymotion comments\", ## \"dailymotion last update of views\", \"vkontakte author ID\", \"vkontakte ## Fans/Members\", \"vkontakte likes\", \"vkontakte comments\", \"vkontakte shares\", ## \"vkontakte last update of likes / comments / shares\", \"reviews Radarly ## normalized rating\", \"reviews platform rating\", \"impressions\", \"estimated ## reach\", \"engagement actions\", \"embedded url\", \"media type\", \"media url\", \"image ## analysis_People detected\", \"image analysis_Gender detected\", \"image ## analysis_Object(s) and animal(s) detected\", \"image analysis_Logo(s) detected\", ## \"favorite\", \"keywords\", \"hashtags\", \"mentions\", \"named entities\", \"story\", ## \"topics\", \"content classification\", \"Custom field : TNF High End\", \"Custom ## field : Gore-Tex\", \"Custom field : Technical Solutions\", \"Custom field : ## Brands\", \"Custom field : Sports\", \"Custom field : Moshi Topics\", \"Custom field ## : Ad Posts\", \"Custom field : Profanity2\", \"Custom field : Occasions\", \"Custom ## field : NeedStates\", \"Custom field : Interests\") data ## # A tibble: 100,000 × 140 ## date text title permalink `site name` queries lang tone `emotion(s)` ## ## 1 08/02/202… \"Hap… https://… http://ins… Adidas en posi… joy ## 2 02/03/202… \"Hap… https://… http://ins… Adidas en posi… joy ## 3 16/03/202… \"Hap… https://… http://ins… Adidas en posi… joy ## 4 16/04/202… \"Loo… https://… http://ins… Adidas en posi… ## 5 27/04/202… \"Hum… https://… http://ins… Adidas en posi… joy ## 6 30/03/202… \"It’… https://… http://ins… Adidas en posi… ## 7 15/02/202… \"Hap… https://… http://ins… Adidas en posi… joy ## 8 09/03/202… \"Hap… https://… http://ins… Adidas en posi… joy ## 9 23/02/202… \"Hap… https://… http://ins… Adidas en posi… ## 10 09/03/202… \"🚨… https://… http://ins… Adidas en posi… ## # … with 99,990 more rows, and 131 more variables: platform , ## # `post type` , `source name` , author , `screen name` , ## # gender , avatar , `verified author account` , ## # `inferred country` , `inferred region` , `inferred city` , ## # `inferred longitude` , `inferred latitude` , ## # `inferred country population` , `inferred region population` , ## # `inferred city population` , `declared country` , … So, there were are - all the data exports loaded in and bound into one object quickly and efficiently!\n",
+  "wordCount" : "1062",
+  "inLanguage": "en",
+  "datePublished": "2022-05-20T00:00:00Z",
+  "dateModified": "2022-05-20T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Mike Tapp, Data Director"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://slack-overflow-help.netlify.app/post/2022-05-20-reading_multiple_files/reading-in-multiple-data-files-at-once/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Slack Overflow tips \u0026 tricks",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://slack-overflow-help.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://slack-overflow-help.netlify.app/" accesskey="h" title="Slack Overflow (Alt + H)">
+                <img src="https://slack-overflow-help.netlify.app/logo.png" alt="logo" aria-label="logo"
+                    height="50">Slack Overflow</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/share_packages/" title="SHARE package docs">
+                    <span>SHARE package docs</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/categories/" title="R packages">
+                    <span>R packages</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://sharecreative.slack.com/archives/C03FEC4C33N" title="slack_overflow">
+                    <span>slack_overflow</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://slack-overflow-help.netlify.app/">Home</a>&nbsp;»&nbsp;<a href="https://slack-overflow-help.netlify.app/post/">Posts</a></div>
+    <h1 class="post-title">
+      Reading in Multiple Data Files at Once
+    </h1>
+    <div class="post-meta"><span title='2022-05-20 00:00:00 +0000 UTC'>May 20, 2022</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;1062 words&nbsp;·&nbsp;Mike Tapp, Data Director
+
+</div>
+  </header> 
+  <div class="post-content">
+
+
+<div id="answer-originally-provided-by-mike-tapp-data-director" class="section level4">
+<h4><em>Answer originally provided by Mike Tapp, Data Director</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the <code>map()</code> function.</p>
+</div>
+<div id="extracting-the-names" class="section level2">
+<h2>Extracting the names</h2>
+<p>R will always need to know the exact names of the files you are trying to read in. You could sit there and copy and paste the file names, but what if you had 20+ files? It’s not very efficient. Instead, let R do the hard work for you and find the names itself.</p>
+<p>Let’s look at the recent Adidas pitch data. There were only two files, but this principle will work no matter how many there are. First, we update our working directory so R knows where the files are saved. Then, as we know all our files are CSVs, we ask R to create an object called <code>paths</code> which is a list of all the CSV files in the directory.</p>
+<pre class="r"><code>setwd(&quot;/Volumes/GoogleDrive/My Drive/Share_Clients/Data Science Project Work/Slack Overflow/reading_multiple_files/data&quot;)
+
+paths &lt;- list.files(pattern = &quot;csv$&quot;, recursive = TRUE)
+paths</code></pre>
+<pre><code>## [1] &quot;Adidas - Feb - Apr .csv&quot; &quot;Adidas - Nov - Jan .csv&quot;</code></pre>
+<p>R has correctly identified the two datafiles in the path. Now it’s time to read them in.</p>
+</div>
+<div id="using-map-to-call-the-same-function-on-multiple-objects" class="section level2">
+<h2>Using map() to call the same function on multiple objects</h2>
+<p><code>map()</code> is a special function that allows you to conduct another function over multiple objects at the same time. When you think about it, it’s exactly the kind of thing we need here. We need to call <code>read_csv()</code> multiple times and <code>map()</code> is going to save us so much time by doing all of those processes at once. The code to do so is very simple:</p>
+<pre class="r"><code>all_docs &lt;- purrr::map(paths, read_csv)</code></pre>
+<p>R has created an object called <code>all_docs</code> which is the result reading in all the CSVs. Great! We aren’t quite there though because at the moment, whilst all the data is in our R environment, they are living as separate objects in that list. We need to bind them all together. For that, we can use a <code>full_join()</code></p>
+<pre class="r"><code>data &lt;- purrr:::reduce(all_docs, full_join)</code></pre>
+<pre><code>## Joining, by = c(&quot;date&quot;, &quot;text&quot;, &quot;title&quot;, &quot;permalink&quot;, &quot;site name&quot;, &quot;queries&quot;,
+## &quot;lang&quot;, &quot;tone&quot;, &quot;emotion(s)&quot;, &quot;platform&quot;, &quot;post type&quot;, &quot;source name&quot;, &quot;author&quot;,
+## &quot;screen name&quot;, &quot;gender&quot;, &quot;avatar&quot;, &quot;verified author account&quot;, &quot;inferred
+## country&quot;, &quot;inferred region&quot;, &quot;inferred city&quot;, &quot;inferred longitude&quot;, &quot;inferred
+## latitude&quot;, &quot;inferred country population&quot;, &quot;inferred region population&quot;,
+## &quot;inferred city population&quot;, &quot;declared country&quot;, &quot;declared region&quot;, &quot;declared
+## city&quot;, &quot;declared longitude&quot;, &quot;declared latitude&quot;, &quot;declared country
+## population&quot;, &quot;declared region population&quot;, &quot;declared city population&quot;, &quot;twitter
+## author id&quot;, &quot;twitter followers&quot;, &quot;twitter retweets&quot;, &quot;twitter retweed of&quot;,
+## &quot;twitter replies&quot;, &quot;twitter likes&quot;, &quot;facebook author id&quot;, &quot;facebook type&quot;,
+## &quot;facebook fans&quot;, &quot;facebook likes&quot;, &quot;facebook shares&quot;, &quot;facebook comments&quot;,
+## &quot;facebook last update of the likes / shares / comments&quot;, &quot;instagram author id&quot;,
+## &quot;instagram followers&quot;, &quot;instagram likes&quot;, &quot;instagram comments&quot;, &quot;instagram
+## replies&quot;, &quot;instagram taps back&quot;, &quot;instagram taps forward&quot;, &quot;instagram exits&quot;,
+## &quot;impressions (IG numbers)&quot;, &quot;reach (IG numbers)&quot;, &quot;instagram last update of the
+## likes / comments&quot;, &quot;pinterest author ID&quot;, &quot;pinterest followers&quot;, &quot;pinterest
+## saves&quot;, &quot;pinterest photos&quot;, &quot;pinterest last update of the saves / photos&quot;, &quot;web
+## pagerank&quot;, &quot;web inbound links&quot;, &quot;web shares on twitter&quot;, &quot;web comments&quot;,
+## &quot;sinaweibo author ID&quot;, &quot;sinaweibo followers&quot;, &quot;sinaweibo reposts&quot;, &quot;sinaweibo
+## repost of&quot;, &quot;sinaweibo likes&quot;, &quot;sinaweibo comments&quot;, &quot;wechat author ID&quot;,
+## &quot;wechat wow&quot;, &quot;wechat likes&quot;, &quot;wechat reads&quot;, &quot;wechat last update of the Likes
+## / Reads&quot;, &quot;tiktok author ID&quot;, &quot;tiktok followers&quot;, &quot;tiktok views&quot;, &quot;tiktok
+## likes&quot;, &quot;tiktok shares&quot;, &quot;tiktok comments&quot;, &quot;tiktok last update of the views /
+## likes / shares / comments&quot;, &quot;douyin author ID&quot;, &quot;douyin likes&quot;, &quot;douyin
+## comments&quot;, &quot;douyin last update of the likes / comments&quot;, &quot;red likes&quot;, &quot;red
+## comments&quot;, &quot;red stars&quot;, &quot;red last update of the likes / comments / stars&quot;,
+## &quot;youtube author ID&quot;, &quot;youtube views&quot;, &quot;youtube likes&quot;, &quot;youtube dislikes&quot;,
+## &quot;youtube comments&quot;, &quot;youtube favourites&quot;, &quot;youtube last update of views&quot;,
+## &quot;dailymotion author ID&quot;, &quot;dailymotion views&quot;, &quot;dailymotion comments&quot;,
+## &quot;dailymotion last update of views&quot;, &quot;vkontakte author ID&quot;, &quot;vkontakte
+## Fans/Members&quot;, &quot;vkontakte likes&quot;, &quot;vkontakte comments&quot;, &quot;vkontakte shares&quot;,
+## &quot;vkontakte last update of likes / comments / shares&quot;, &quot;reviews Radarly
+## normalized rating&quot;, &quot;reviews platform rating&quot;, &quot;impressions&quot;, &quot;estimated
+## reach&quot;, &quot;engagement actions&quot;, &quot;embedded url&quot;, &quot;media type&quot;, &quot;media url&quot;, &quot;image
+## analysis_People detected&quot;, &quot;image analysis_Gender detected&quot;, &quot;image
+## analysis_Object(s) and animal(s) detected&quot;, &quot;image analysis_Logo(s) detected&quot;,
+## &quot;favorite&quot;, &quot;keywords&quot;, &quot;hashtags&quot;, &quot;mentions&quot;, &quot;named entities&quot;, &quot;story&quot;,
+## &quot;topics&quot;, &quot;content classification&quot;, &quot;Custom field : TNF High End&quot;, &quot;Custom
+## field : Gore-Tex&quot;, &quot;Custom field : Technical Solutions&quot;, &quot;Custom field :
+## Brands&quot;, &quot;Custom field : Sports&quot;, &quot;Custom field : Moshi Topics&quot;, &quot;Custom field
+## : Ad Posts&quot;, &quot;Custom field : Profanity2&quot;, &quot;Custom field : Occasions&quot;, &quot;Custom
+## field : NeedStates&quot;, &quot;Custom field : Interests&quot;)</code></pre>
+<pre class="r"><code>data</code></pre>
+<pre><code>## # A tibble: 100,000 × 140
+##    date       text  title permalink `site name` queries lang  tone  `emotion(s)`
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;       
+##  1 08/02/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  2 02/03/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  3 16/03/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  4 16/04/202… &quot;Loo… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+##  5 27/04/202… &quot;Hum… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  6 30/03/202… &quot;It’… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+##  7 15/02/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  8 09/03/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… joy         
+##  9 23/02/202… &quot;Hap… &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+## 10 09/03/202… &quot;🚨…  &lt;NA&gt;  https://… http://ins… Adidas  en    posi… &lt;NA&gt;        
+## # … with 99,990 more rows, and 131 more variables: platform &lt;chr&gt;,
+## #   `post type` &lt;chr&gt;, `source name` &lt;lgl&gt;, author &lt;chr&gt;, `screen name` &lt;chr&gt;,
+## #   gender &lt;chr&gt;, avatar &lt;chr&gt;, `verified author account` &lt;chr&gt;,
+## #   `inferred country` &lt;chr&gt;, `inferred region` &lt;chr&gt;, `inferred city` &lt;chr&gt;,
+## #   `inferred longitude` &lt;dbl&gt;, `inferred latitude` &lt;dbl&gt;,
+## #   `inferred country population` &lt;dbl&gt;, `inferred region population` &lt;dbl&gt;,
+## #   `inferred city population` &lt;dbl&gt;, `declared country` &lt;chr&gt;, …</code></pre>
+<p>So, there were are - all the data exports loaded in and bound into one object quickly and efficiently!</p>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://slack-overflow-help.netlify.app/tags/import_files/">import_files</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/load_files/">load_files</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://slack-overflow-help.netlify.app/">Slack Overflow tips &amp; tricks</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a><p style="text-align:center"><span style="color:#7f8c8d"><em><span style="font-size:10px">&quot;Dont hate dplyr; hate the game&quot;</span></em></span></p>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

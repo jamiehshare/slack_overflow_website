@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>SegmentR on Slack Overflow tips &amp; tricks</title>
+    <link>https://slack-overflow-help.netlify.app/categories/segmentr/</link>
+    <description>Recent content in SegmentR on Slack Overflow tips &amp; tricks</description>
+    <image>
+      <url>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 14 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://slack-overflow-help.netlify.app/categories/segmentr/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Change text size of SegmentR plots</title>
+      <link>https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/</link>
+      <pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/</guid>
+      <description>Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).
+Let’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)</description>
+    </item>
+    
+    <item>
+      <title>Updating Packages</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/</link>
+      <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/</guid>
+      <description>Topic originally suggested by Mike Tapp, Data Diretor The Problem Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.
+We can update packages in a few ways:
+Using R script If we know a specific package that needs to be updated, we can run the code:
+install.packages(&amp;quot;PACKAGE_NAME&amp;quot;) So for example:
+install.packages(&amp;quot;ggplot2&amp;quot;) Note the quotation marks surrounding the package name</description>
+    </item>
+    
+  </channel>
+</rss>

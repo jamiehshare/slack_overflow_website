@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Slack Overflow tips &amp; tricks</title>
+    <link>https://slack-overflow-help.netlify.app/post/</link>
+    <description>Recent content in Posts on Slack Overflow tips &amp; tricks</description>
+    <image>
+      <url>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 14 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://slack-overflow-help.netlify.app/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Change text size of SegmentR plots</title>
+      <link>https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/</link>
+      <pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/</guid>
+      <description>Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).
+Let’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)</description>
+    </item>
+    
+    <item>
+      <title>Consistently Save Plots</title>
+      <link>https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/</link>
+      <pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/</guid>
+      <description>Answers originally suggested by Jamie Hudson, Data Scientist and Jack Penzer, Senior Data Scientist The Problem It is important to be able to export/save the figures created in R in a consistent manner, so that throughout a deck all plots of a similar type (e.g. all bigrams) are the same size and resolution.
+If plots are saved using the Plots panel by clicking Export and Save as image, it is very easy to accidentally save plots as different sizes (and you cannot alter the resolution from the default value).</description>
+    </item>
+    
+    <item>
+      <title>Extract Comment from Quote Tweet</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-29-retweets/retweets/</link>
+      <pubDate>Wed, 29 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-29-retweets/retweets/</guid>
+      <description>Topic originally suggested by Jack Penzer, Data Scientist The Problem 🚨Note this is only relevant to data that has not come from Sprinklr. Quoted retweets are classified as mentions in Sprinklr and only simple retweets are considered retweets🚨
+When creating bigram networks and performing topic modelling on Twitter data it can often be difficult to deal with retweets (RTs).
+If we leave all RTs in the data set, the bigram networks will comprise only the most retweeted RTs, as will most of the topics inferred through topic modelling.</description>
+    </item>
+    
+    <item>
+      <title>Creating Snippets</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/</link>
+      <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/</guid>
+      <description>Topic originally suggested by Jack Penzer, Data Scientist The Problem As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.
+What are Code Snippets? Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency.</description>
+    </item>
+    
+    <item>
+      <title>Updating Packages</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/</link>
+      <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/</guid>
+      <description>Topic originally suggested by Mike Tapp, Data Diretor The Problem Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.
+We can update packages in a few ways:
+Using R script If we know a specific package that needs to be updated, we can run the code:
+install.packages(&amp;quot;PACKAGE_NAME&amp;quot;) So for example:
+install.packages(&amp;quot;ggplot2&amp;quot;) Note the quotation marks surrounding the package name</description>
+    </item>
+    
+    <item>
+      <title>Combine data frames with new column</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-10-combine_dfs_with_new_col/gdata_combine/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-10-combine_dfs_with_new_col/gdata_combine/</guid>
+      <description>Answer originally provided by Jack Penzer &amp;amp; Jamie Hudson, Data Scientists The Problem Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.
+In this example, we are going to use three dummy data frames called amazon, microsoft, and google, which contain the columns message_id, message, and author- though the solutions provided would work even if the data frames had many more columns.</description>
+    </item>
+    
+    <item>
+      <title>Extracting and filtering for subreddits</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-10-subreddit_extraction/subreddit_extraction/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-10-subreddit_extraction/subreddit_extraction/</guid>
+      <description>Topic originally suggested by Jack Penzer, Data Scientist The problem Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.
+For this tutorial, let’s say we have a dataset in R called data, that looks like the following:
+head(data) ## # A tibble: 6 × 14 ## project_id date author mention_content ave_sentiment sentiment ## &amp;lt;int&amp;gt; &amp;lt;date&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; ## 1 1 2022-04-27 Instagram User love airpods co… 0.</description>
+    </item>
+    
+    <item>
+      <title>Issues with fonts</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-10-issues_with_fonts/issues_with_fonts/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-10-issues_with_fonts/issues_with_fonts/</guid>
+      <description>Answer originally provided by Jack Penzer, Data Scientist The Problem When trying to plot a visualisation (e.g., bigrams), you are greeted with the following error message:
+Type of error message we may see
+This is an issue with R being unable to find the appropriate fonts to produce our plot.
+The Solution- reinstall fonts and restart R session. We need to make sure we have the correct fonts installed on our computers, and also imported into R.</description>
+    </item>
+    
+    <item>
+      <title>Reading in Multiple Data Files at Once</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-05-20-reading_multiple_files/reading-in-multiple-data-files-at-once/</link>
+      <pubDate>Fri, 20 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-05-20-reading_multiple_files/reading-in-multiple-data-files-at-once/</guid>
+      <description>Answer originally provided by Mike Tapp, Data Director The Problem Quite often, we might have data spread across multiple files. This could be multiple listening exports, survey responses etc. It would be quite time consuming to read them all in one by one. In this example, we’re going to look at a solution at is able to extract the file names from a directory and then read in the files that match the strings you have extracted in one go using the map() function.</description>
+    </item>
+    
+  </channel>
+</rss>

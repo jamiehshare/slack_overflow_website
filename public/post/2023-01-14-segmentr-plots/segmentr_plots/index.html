@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Change text size of SegmentR plots | Slack Overflow tips &amp; tricks</title>
+<meta name="keywords" content="ggplot2, ggsave, figures">
+<meta name="description" content="Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).
+Let’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)">
+<meta name="author" content="Jamie Hudson, Data Scientist">
+<link rel="canonical" href="https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-233404530-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-233404530-1');
+</script>
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f5cd59ea56957c99ecadcf027c42b755eddc79842563adbc375b7fcbc8a04dd8.css" integrity="sha256-9c1Z6laVfJnsrc8CfEK3Ve3ceYQlY628N1t/y8igTdg=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://slack-overflow-help.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://slack-overflow-help.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://slack-overflow-help.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://slack-overflow-help.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://slack-overflow-help.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-233404530-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script><meta property="og:title" content="Change text size of SegmentR plots" />
+<meta property="og:description" content="Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).
+Let’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/" /><meta property="og:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-02-14T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2023-02-14T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/>
+
+<meta name="twitter:title" content="Change text size of SegmentR plots"/>
+<meta name="twitter:description" content="Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).
+Let’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://slack-overflow-help.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Change text size of SegmentR plots",
+      "item": "https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Change text size of SegmentR plots",
+  "name": "Change text size of SegmentR plots",
+  "description": "Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).\nLet’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)",
+  "keywords": [
+    "ggplot2", "ggsave", "figures"
+  ],
+  "articleBody": " Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).\nLet’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)\nsprinklr_export \u003c- SegmentR::sprinklr_export %\u003e% filter(!str_detect(Message, \"A word of advice\\\\?\")) dtms \u003c- sprinklr_export %\u003e% SegmentR::make_DTMs(text_var = Message, min_freq = 10, hashtags = FALSE, mentions = FALSE, clean_text = TRUE, remove_stops = TRUE) ldas \u003c- dtms %\u003e% SegmentR::fit_LDAs(k_opts = 3, iter_opts = 1000) explore \u003c- ldas %\u003e% SegmentR::explore_LDAs(top_terms = TRUE, diff_terms = TRUE, bigrams = TRUE, exemplars = TRUE) Now, we can view this plot by pulling the top_terms and plucking “all_terms” (again, this is all explained in the SegmentR documentation)\nexplore %\u003e% filter(freq_cutoff == 10 \u0026 k == 3 \u0026 iter == 1000) %\u003e% pull(top_terms) %\u003e% pluck(1, \"all_terms\") We can see that all of the text on the y axis (the top terms for each topic) is a tad squished and doesn’t look the best.\nThe Solution There are a few different solutions which can be tried to fix this problem. The first is to save the plot using JPackage::plot_save() with larger dimensions. Please read the Slack Overflow page for this here to see the code and rationale behind this.\nIf this doesn’t work, or if we want a different solution we can manipulate the plot by either: 1) reducing the number of terms shown, 2) laying out the plots on only one row, 3) reducing the font size\nLet’s look at these solutions one by one.\nTo reduce the number of terms shown, we need to go back to our SegmentR::explore_LDAs() function. There is an argument here, top_n, which determines how many terms per topic we visualise. For a full list of potential arguments, you can type ?SegmentR::explore_LDAs to access and read the documentation.\nLet’s change this argument to 12 and see if this helps (note as seen in the documentation, the default value for this is 20):\nexplore \u003c- ldas %\u003e% SegmentR::explore_LDAs(top_terms = TRUE, diff_terms = TRUE, bigrams = TRUE, exemplars = TRUE, top_n = 12) #Set the number of terms to appear as 12 explore %\u003e% filter(freq_cutoff == 10 \u0026 k == 3 \u0026 iter == 1000) %\u003e% pull(top_terms) %\u003e% pluck(1, \"all_terms\") Et voilà, you can see that now we have reduced the number of terms, there is nicer white space between the bars and the text isn’t so squished.\nWe can also use the SegmentR::explore_LDAs function to force the plot to appear in one row (rather than faceting the plot into two rows of charts, as it is currently doing). Again, this is controlled by the argument nrow and we can set this to be equal to 1: explore \u003c- ldas %\u003e% SegmentR::explore_LDAs(top_terms = TRUE, diff_terms = TRUE, bigrams = TRUE, exemplars = TRUE, nrow = 1) #Set the number of rows to be 1 explore %\u003e% filter(freq_cutoff == 10 \u0026 k == 3 \u0026 iter == 1000) %\u003e% pull(top_terms) %\u003e% pluck(1, \"all_terms\") As we are not forcing the plots on two rows, the stretch out vertically a bit more now, but certainly do not seem as squashed in this dimension any more.\nFinally, we can edit the size of the text in question specifically. In contrast to the previous two solutions, we do not do this via the SegmentR::explore_LDAs function, but rather explicitly set this when pulling the plot from the explore object. We do this by providing the ggplot2 function theme() to our code. Within theme() we can specify the argument axis.text.y to be equal to element_text(size = 8). Play around with this size (larger numbers = larger text) until you are happy. Note that this can also be used to specify the size of the x axis text with the argument axis.text.y. As always though, if you end up changing the size of the axis text in one plot, be considerate as to whether other plots also need to be changed for consistency. explore \u003c- ldas %\u003e% SegmentR::explore_LDAs(top_terms = TRUE, diff_terms = TRUE, bigrams = TRUE, exemplars = TRUE) explore %\u003e% filter(freq_cutoff == 10 \u0026 k == 3 \u0026 iter == 1000) %\u003e% pull(top_terms) %\u003e% pluck(1, \"all_terms\") + theme(axis.text.y = element_text(size = 8)) #Use the theme function to specify the size of the y axis text And there you go, these are some potential solutions to helping clean up some plots that have been made in SegmentR. Note that these are not mutually exclusive, and we can combine these solutions together (for example displaying 12 terms, on one row, with a smaller font size) if we so wish.\n",
+  "wordCount" : "815",
+  "inLanguage": "en",
+  "datePublished": "2023-02-14T00:00:00Z",
+  "dateModified": "2023-02-14T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Jamie Hudson, Data Scientist"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Slack Overflow tips \u0026 tricks",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://slack-overflow-help.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://slack-overflow-help.netlify.app/" accesskey="h" title="Slack Overflow (Alt + H)">
+                <img src="https://slack-overflow-help.netlify.app/logo.png" alt="logo" aria-label="logo"
+                    height="50">Slack Overflow</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/share_packages/" title="SHARE package docs">
+                    <span>SHARE package docs</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/categories/" title="R packages">
+                    <span>R packages</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://sharecreative.slack.com/archives/C03FEC4C33N" title="slack_overflow">
+                    <span>slack_overflow</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://slack-overflow-help.netlify.app/">Home</a>&nbsp;»&nbsp;<a href="https://slack-overflow-help.netlify.app/post/">Posts</a></div>
+    <h1 class="post-title">
+      Change text size of SegmentR plots
+    </h1>
+    <div class="post-meta"><span title='2023-02-14 00:00:00 +0000 UTC'>February 14, 2023</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;815 words&nbsp;·&nbsp;Jamie Hudson, Data Scientist
+
+</div>
+  </header> 
+  <div class="post-content">
+
+
+<div id="answer-originally-suggested-by-jack-penzer-senior-data-scientist" class="section level4">
+<h4><em>Answer originally suggested by Jack Penzer, Senior Data Scientist</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).</p>
+<p>Let’s use the example ‘Top Terms’ plot from the <a href="https://avery-island.github.io/SegmentR/articles/1_topic_modelling.html">SegmentR documentation</a> to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of <code>min_freq</code>, <code>k_opts</code> etc here because this is just for demonstration- we <strong>must</strong> try different values for project work)</p>
+<pre class="r"><code>sprinklr_export &lt;- SegmentR::sprinklr_export %&gt;%
+  filter(!str_detect(Message, &quot;A word of advice\\?&quot;))
+
+dtms &lt;- sprinklr_export %&gt;%
+  SegmentR::make_DTMs(text_var = Message,
+                      min_freq = 10,
+                      hashtags = FALSE,
+                      mentions = FALSE,
+                      clean_text = TRUE,
+                      remove_stops = TRUE)
+
+ldas &lt;- dtms %&gt;%
+  SegmentR::fit_LDAs(k_opts = 3,
+                     iter_opts = 1000)
+
+explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE)</code></pre>
+<p>Now, we can view this plot by <code>pull</code>ing the top_terms and <code>pluck</code>ing “all_terms” (again, this is all explained in the <a href="https://avery-island.github.io/SegmentR/articles/1_topic_modelling.html">SegmentR documentation</a>)</p>
+<pre class="r"><code>explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;)</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can see that all of the text on the y axis (the top terms for each topic) is a tad squished and doesn’t look the best.</p>
+</div>
+<div id="the-solution" class="section level2">
+<h2>The Solution</h2>
+<p>There are a few different solutions which can be tried to fix this problem. The first is to save the plot using <code>JPackage::plot_save()</code> with larger dimensions. Please read the Slack Overflow page for this <a href="https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/">here</a> to see the code and rationale behind this.</p>
+<p>If this doesn’t work, or if we want a different solution we can manipulate the plot by either:
+1) reducing the number of terms shown,
+2) laying out the plots on only one row,
+3) reducing the font size</p>
+<p>Let’s look at these solutions one by one.</p>
+<ol style="list-style-type: decimal">
+<li>To reduce the number of terms shown, we need to go back to our <code>SegmentR::explore_LDAs()</code> function. There is an argument here, <code>top_n</code>, which determines how many terms per topic we visualise.</li>
+</ol>
+<p>For a full list of potential arguments, you can type <code>?SegmentR::explore_LDAs</code> to access and read the documentation.</p>
+<p>Let’s change this argument to 12 and see if this helps (note as seen in the documentation, the default value for this is 20):</p>
+<pre class="r"><code>explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE,
+                         top_n = 12) #Set the number of terms to appear as 12
+
+explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;)</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Et voilà, you can see that now we have reduced the number of terms, there is nicer white space between the bars and the text isn’t so squished.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>We can also use the <code>SegmentR::explore_LDAs</code> function to force the plot to appear in one row (rather than faceting the plot into two rows of charts, as it is currently doing). Again, this is controlled by the argument <code>nrow</code> and we can set this to be equal to <code>1</code>:</li>
+</ol>
+<pre class="r"><code>explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE,
+                         nrow = 1) #Set the number of rows to be 1
+
+explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;)</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>As we are not forcing the plots on two rows, the stretch out vertically a bit more now, but certainly do not seem as squashed in this dimension any more.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Finally, we can edit the size of the text in question specifically. In contrast to the previous two solutions, we do not do this via the <code>SegmentR::explore_LDAs</code> function, but rather explicitly set this when pulling the plot from the <code>explore</code> object. We do this by providing the <code>ggplot2</code> function <code>theme()</code> to our code. Within <code>theme()</code> we can specify the argument <code>axis.text.y</code> to be equal to <code>element_text(size = 8)</code>. Play around with this size (larger numbers = larger text) until you are happy. Note that this can also be used to specify the size of the x axis text with the argument <code>axis.text.y</code>. As always though, if you end up changing the size of the axis text in one plot, be considerate as to whether other plots also need to be changed for consistency.</li>
+</ol>
+<pre class="r"><code>explore &lt;- ldas %&gt;%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE)
+
+explore %&gt;%
+  filter(freq_cutoff == 10 &amp; k == 3 &amp; iter == 1000) %&gt;%
+  pull(top_terms) %&gt;%
+  pluck(1, &quot;all_terms&quot;) +
+  theme(axis.text.y = element_text(size = 8)) #Use the theme function to specify the size of the y axis text</code></pre>
+<p><img src="/post/2023-01-14-segmentr-plots/segmentr_plots_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>And there you go, these are some potential solutions to helping clean up some plots that have been made in SegmentR. Note that these are not mutually exclusive, and we can combine these solutions together (for example displaying 12 terms, on one row, with a smaller font size) if we so wish.</p>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://slack-overflow-help.netlify.app/tags/ggplot2/">ggplot2</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/ggsave/">ggsave</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/figures/">figures</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://slack-overflow-help.netlify.app/">Slack Overflow tips &amp; tricks</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a><p style="text-align:center"><span style="color:#7f8c8d"><em><span style="font-size:10px">&quot;Dont hate dplyr; hate the game&quot;</span></em></span></p>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

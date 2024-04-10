@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Combine data frames with new column | Slack Overflow tips &amp; tricks</title>
+<meta name="keywords" content="cleaning, plot, tidyverse">
+<meta name="description" content="Answer originally provided by Jack Penzer &amp; Jamie Hudson, Data Scientists The Problem Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.
+In this example, we are going to use three dummy data frames called amazon, microsoft, and google, which contain the columns message_id, message, and author- though the solutions provided would work even if the data frames had many more columns.">
+<meta name="author" content="Jamie Hudson, Data Scientist">
+<link rel="canonical" href="https://slack-overflow-help.netlify.app/post/2022-06-10-combine_dfs_with_new_col/gdata_combine/">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-233404530-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-233404530-1');
+</script>
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f5cd59ea56957c99ecadcf027c42b755eddc79842563adbc375b7fcbc8a04dd8.css" integrity="sha256-9c1Z6laVfJnsrc8CfEK3Ve3ceYQlY628N1t/y8igTdg=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://slack-overflow-help.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://slack-overflow-help.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://slack-overflow-help.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://slack-overflow-help.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://slack-overflow-help.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-233404530-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script><meta property="og:title" content="Combine data frames with new column" />
+<meta property="og:description" content="Answer originally provided by Jack Penzer &amp; Jamie Hudson, Data Scientists The Problem Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.
+In this example, we are going to use three dummy data frames called amazon, microsoft, and google, which contain the columns message_id, message, and author- though the solutions provided would work even if the data frames had many more columns." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://slack-overflow-help.netlify.app/post/2022-06-10-combine_dfs_with_new_col/gdata_combine/" /><meta property="og:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-10T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-06-10T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/>
+
+<meta name="twitter:title" content="Combine data frames with new column"/>
+<meta name="twitter:description" content="Answer originally provided by Jack Penzer &amp; Jamie Hudson, Data Scientists The Problem Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.
+In this example, we are going to use three dummy data frames called amazon, microsoft, and google, which contain the columns message_id, message, and author- though the solutions provided would work even if the data frames had many more columns."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://slack-overflow-help.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Combine data frames with new column",
+      "item": "https://slack-overflow-help.netlify.app/post/2022-06-10-combine_dfs_with_new_col/gdata_combine/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Combine data frames with new column",
+  "name": "Combine data frames with new column",
+  "description": "Answer originally provided by Jack Penzer \u0026amp; Jamie Hudson, Data Scientists The Problem Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.\nIn this example, we are going to use three dummy data frames called amazon, microsoft, and google, which contain the columns message_id, message, and author- though the solutions provided would work even if the data frames had many more columns.",
+  "keywords": [
+    "cleaning", "plot", "tidyverse"
+  ],
+  "articleBody": " Answer originally provided by Jack Penzer \u0026 Jamie Hudson, Data Scientists The Problem Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.\nIn this example, we are going to use three dummy data frames called amazon, microsoft, and google, which contain the columns message_id, message, and author- though the solutions provided would work even if the data frames had many more columns.\nhead(amazon) ## # A tibble: 3 × 3 ## message_id message author ## ## 1 12345 Amazon was founded in 1994 from my Garage in Bellevue, Wash… Jeff … ## 2 23456 What do you call two monkeys that share an Amazon Account? … Tom S… ## 3 34567 30% of the world's species live in the Amazon David… head(microsoft) ## # A tibble: 3 × 3 ## message_id message author ## ## 1 123 The name Microsoft is a combination of the words microcompu… Mike … ## 2 456 MS Office was released on the Macintosh before the Windows … @fact… ## 3 789 RT @facts_r_us MS Office was released on the Macintosh befo… @retw… head(google) ## # A tibble: 3 × 3 ## message_id message author ## ## 1 22 A Googol is a 1 with 100 zeros after it Larry… ## 2 33 Check out these amazing Google facts that will blow your mi… Elgoog ## 3 44 Google is the world's most visited website Googl… Solution 1- mutate() and then bind_rows() One solution is to add a new variable to each data frame individually using the dplyr::mutate() function, and then bind these individual data frames into one using the dplyr::bind_rows() function.\nlibrary(dplyr) amazon_mutated \u003c- amazon %\u003e% dplyr::mutate(source = \"amazon\") microsoft_mutated \u003c- microsoft %\u003e% dplyr::mutate(source = \"microsoft\") google_mutated \u003c- google %\u003e% dplyr::mutate(source = \"google\") combined_df \u003c- dplyr::bind_rows(amazon_mutated, microsoft_mutated, google_mutated) Here, we used dplyr::mutate() to create a new column called source, which we labelled with the name of each data frame, before binding using dplyr::bind_rows() to produce our new data frame called combined_df. We can view what this data frame looks like, with our new source column:\nhead(combined_df) ## # A tibble: 6 × 4 ## message_id message author source ## ## 1 12345 Amazon was founded in 1994 from my Garage in Bellevu… Jeff … amazon ## 2 23456 What do you call two monkeys that share an Amazon Ac… Tom S… amazon ## 3 34567 30% of the world's species live in the Amazon David… amazon ## 4 123 The name Microsoft is a combination of the words mic… Mike … micro… ## 5 456 MS Office was released on the Macintosh before the W… @fact… micro… ## 6 789 RT @facts_r_us MS Office was released on the Macinto… @retw… micro… Solution 2- quicker with gdata::combine() A quicker and simpler way to achieve the same result is using the gdata::combine() function. This combines our data frames into rows of a new data frame with the additional column source, all at once. The value of this new source column is the name of the original (source) data frame.\nN.B. the first time you run this function, you may have to install the gdata library\ninstall.packages(\"gdata\") library(gdata) combined_df \u003c- gdata::combine(amazon, microsoft, google) head(combined_df) ## message_id ## 1 12345 ## 2 23456 ## 3 34567 ## 4 123 ## 5 456 ## 6 789 ## message ## 1 Amazon was founded in 1994 from my Garage in Bellevue, Washing ## 2 What do you call two monkeys that share an Amazon Account? Prime mates ## 3 30% of the world's species live in the Amazon ## 4 The name Microsoft is a combination of the words microcomputer and software ## 5 MS Office was released on the Macintosh before the Windows OS ## 6 RT @facts_r_us MS Office was released on the Macintosh before the Windows OS ## author source ## 1 Jeff Bezos amazon ## 2 Tom Smith amazon ## 3 David Attenborough amazon ## 4 Mike O'Soft microsoft ## 5 @facts_r_us microsoft ## 6 @retweet_bot microsoft Et voilà, now we have a new data frame with an additional source column with just one line of code!\n",
+  "wordCount" : "729",
+  "inLanguage": "en",
+  "datePublished": "2022-06-10T00:00:00Z",
+  "dateModified": "2022-06-10T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Jamie Hudson, Data Scientist"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://slack-overflow-help.netlify.app/post/2022-06-10-combine_dfs_with_new_col/gdata_combine/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Slack Overflow tips \u0026 tricks",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://slack-overflow-help.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://slack-overflow-help.netlify.app/" accesskey="h" title="Slack Overflow (Alt + H)">
+                <img src="https://slack-overflow-help.netlify.app/logo.png" alt="logo" aria-label="logo"
+                    height="50">Slack Overflow</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/share_packages/" title="SHARE package docs">
+                    <span>SHARE package docs</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/categories/" title="R packages">
+                    <span>R packages</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://sharecreative.slack.com/archives/C03FEC4C33N" title="slack_overflow">
+                    <span>slack_overflow</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://slack-overflow-help.netlify.app/">Home</a>&nbsp;»&nbsp;<a href="https://slack-overflow-help.netlify.app/post/">Posts</a></div>
+    <h1 class="post-title">
+      Combine data frames with new column
+    </h1>
+    <div class="post-meta"><span title='2022-06-10 00:00:00 +0000 UTC'>June 10, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;729 words&nbsp;·&nbsp;Jamie Hudson, Data Scientist
+
+</div>
+  </header> 
+  <div class="post-content">
+
+
+<div id="answer-originally-provided-by-jack-penzer-jamie-hudson-data-scientists" class="section level4">
+<h4><em>Answer originally provided by Jack Penzer &amp; Jamie Hudson, Data Scientists</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Sometimes we have multiple data frames containing the same variables but for different companies, for example. We might then want to be able to join these data frames together, creating a new variable (column) that corresponds to the name of the original data frame.</p>
+<p>In this example, we are going to use three dummy data frames called <code>amazon</code>, <code>microsoft</code>, and <code>google</code>, which contain the columns <code>message_id</code>, <code>message</code>, and <code>author</code>- though the solutions provided would work even if the data frames had many more columns.</p>
+<pre class="r"><code>head(amazon)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   message_id message                                                      author
+##   &lt;chr&gt;      &lt;chr&gt;                                                        &lt;chr&gt; 
+## 1 12345      Amazon was founded in 1994 from my Garage in Bellevue, Wash… Jeff …
+## 2 23456      What do you call two monkeys that share an Amazon Account? … Tom S…
+## 3 34567      30% of the world&#39;s species live in the Amazon                David…</code></pre>
+<pre class="r"><code>head(microsoft)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   message_id message                                                      author
+##   &lt;chr&gt;      &lt;chr&gt;                                                        &lt;chr&gt; 
+## 1 123        The name Microsoft is a combination of the words microcompu… Mike …
+## 2 456        MS Office was released on the Macintosh before the Windows … @fact…
+## 3 789        RT @facts_r_us MS Office was released on the Macintosh befo… @retw…</code></pre>
+<pre class="r"><code>head(google)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   message_id message                                                      author
+##   &lt;chr&gt;      &lt;chr&gt;                                                        &lt;chr&gt; 
+## 1 22         A Googol is a 1 with 100 zeros after it                      Larry…
+## 2 33         Check out these amazing Google facts that will blow your mi… Elgoog
+## 3 44         Google is the world&#39;s most visited website                   Googl…</code></pre>
+</div>
+<div id="solution-1--mutate-and-then-bind_rows" class="section level2">
+<h2>Solution 1- <code>mutate()</code> and then <code>bind_rows()</code></h2>
+<p>One solution is to add a new variable to each data frame individually using the <code>dplyr::mutate()</code> function, and then bind these individual data frames into one using the <code>dplyr::bind_rows()</code> function.</p>
+<pre class="r"><code>library(dplyr)
+
+amazon_mutated &lt;- amazon %&gt;% 
+  dplyr::mutate(source = &quot;amazon&quot;)
+
+microsoft_mutated &lt;- microsoft %&gt;% 
+  dplyr::mutate(source = &quot;microsoft&quot;)
+
+google_mutated &lt;- google %&gt;% 
+  dplyr::mutate(source = &quot;google&quot;)
+
+combined_df &lt;- dplyr::bind_rows(amazon_mutated, microsoft_mutated, google_mutated)</code></pre>
+<p>Here, we used <code>dplyr::mutate()</code> to create a new column called <code>source</code>, which we labelled with the name of each data frame, before binding using <code>dplyr::bind_rows()</code> to produce our new data frame called <code>combined_df</code>. We can view what this data frame looks like, with our new <code>source</code> column:</p>
+<pre class="r"><code>head(combined_df)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##   message_id message                                               author source
+##   &lt;chr&gt;      &lt;chr&gt;                                                 &lt;chr&gt;  &lt;chr&gt; 
+## 1 12345      Amazon was founded in 1994 from my Garage in Bellevu… Jeff … amazon
+## 2 23456      What do you call two monkeys that share an Amazon Ac… Tom S… amazon
+## 3 34567      30% of the world&#39;s species live in the Amazon         David… amazon
+## 4 123        The name Microsoft is a combination of the words mic… Mike … micro…
+## 5 456        MS Office was released on the Macintosh before the W… @fact… micro…
+## 6 789        RT @facts_r_us MS Office was released on the Macinto… @retw… micro…</code></pre>
+</div>
+<div id="solution-2--quicker-with-gdatacombine" class="section level2">
+<h2>Solution 2- quicker with <code>gdata::combine()</code></h2>
+<p>A quicker and simpler way to achieve the same result is using the <code>gdata::combine()</code> function. This combines our data frames into rows of a new data frame with the additional column <code>source</code>, all at once. The value of this new <code>source</code> column is the name of the original (source) data frame.</p>
+<p><strong>N.B. the first time you run this function, you may have to install the <code>gdata</code> library</strong></p>
+<pre class="r"><code>install.packages(&quot;gdata&quot;)</code></pre>
+<pre class="r"><code>library(gdata)
+
+combined_df &lt;- gdata::combine(amazon, microsoft, google)
+
+head(combined_df)</code></pre>
+<pre><code>##   message_id
+## 1      12345
+## 2      23456
+## 3      34567
+## 4        123
+## 5        456
+## 6        789
+##                                                                        message
+## 1               Amazon was founded in 1994 from my Garage in Bellevue, Washing
+## 2       What do you call two monkeys that share an Amazon Account? Prime mates
+## 3                                30% of the world&#39;s species live in the Amazon
+## 4  The name Microsoft is a combination of the words microcomputer and software
+## 5                MS Office was released on the Macintosh before the Windows OS
+## 6 RT @facts_r_us MS Office was released on the Macintosh before the Windows OS
+##               author    source
+## 1         Jeff Bezos    amazon
+## 2          Tom Smith    amazon
+## 3 David Attenborough    amazon
+## 4        Mike O&#39;Soft microsoft
+## 5        @facts_r_us microsoft
+## 6       @retweet_bot microsoft</code></pre>
+<p>Et voilà, now we have a new data frame with an additional <code>source</code> column with just one line of code!</p>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://slack-overflow-help.netlify.app/tags/cleaning/">cleaning</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/plot/">plot</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/tidyverse/">tidyverse</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://slack-overflow-help.netlify.app/">Slack Overflow tips &amp; tricks</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a><p style="text-align:center"><span style="color:#7f8c8d"><em><span style="font-size:10px">&quot;Dont hate dplyr; hate the game&quot;</span></em></span></p>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

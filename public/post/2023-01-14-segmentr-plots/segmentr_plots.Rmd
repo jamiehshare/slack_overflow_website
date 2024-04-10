@@ -1,0 +1,136 @@
+---
+title: "Change text size of SegmentR plots"
+author: "Jamie Hudson, Data Scientist"
+date: "2023-02-14"
+categories: ["tidyverse", "ggplot2", "segmentr"]
+tags: ["ggplot2", "ggsave", "figures"]
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### *Answer originally suggested by Jack Penzer, Senior Data Scientist*
+
+## The Problem
+
+Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).
+
+Let's use the example 'Top Terms' plot from the [SegmentR documentation](https://avery-island.github.io/SegmentR/articles/1_topic_modelling.html) to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of `min_freq`, `k_opts` etc here because this is just for demonstration- we **must** try different values for project work)
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(SegmentR)
+library(JPackage)
+```
+
+
+```{r message=FALSE}
+sprinklr_export <- SegmentR::sprinklr_export %>%
+  filter(!str_detect(Message, "A word of advice\\?"))
+
+dtms <- sprinklr_export %>%
+  SegmentR::make_DTMs(text_var = Message,
+                      min_freq = 10,
+                      hashtags = FALSE,
+                      mentions = FALSE,
+                      clean_text = TRUE,
+                      remove_stops = TRUE)
+
+ldas <- dtms %>%
+  SegmentR::fit_LDAs(k_opts = 3,
+                     iter_opts = 1000)
+
+explore <- ldas %>%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE)
+```
+
+Now, we can view this plot by `pull`ing the top_terms and `pluck`ing "all_terms" (again, this is all explained in the [SegmentR documentation](https://avery-island.github.io/SegmentR/articles/1_topic_modelling.html))
+
+```{r}
+explore %>%
+  filter(freq_cutoff == 10 & k == 3 & iter == 1000) %>%
+  pull(top_terms) %>%
+  pluck(1, "all_terms")
+```
+
+We can see that all of the text on the y axis (the top terms for each topic) is a tad squished and doesn't look the best.
+
+## The Solution
+
+There are a few different solutions which can be tried to fix this problem. The first is to save the plot using `JPackage::plot_save()` with larger dimensions. Please read the Slack Overflow page for this [here](https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/) to see the code and rationale behind this.
+
+If this doesn't work, or if we want a different solution we can manipulate the plot by either:
+  1) reducing the number of terms shown, 
+  2) laying out the plots on only one row,
+  3) reducing the font size
+
+Let's look at these solutions one by one.
+
+1) To reduce the number of terms shown, we need to go back to our `SegmentR::explore_LDAs()` function. There is an argument here, `top_n`, which determines how many terms per topic we visualise. 
+
+For a full list of potential arguments, you can type `?SegmentR::explore_LDAs` to access and read the documentation. 
+
+Let's change this argument to 12 and see if this helps (note as seen in the documentation, the default value for this is 20):
+
+```{r}
+explore <- ldas %>%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE,
+                         top_n = 12) #Set the number of terms to appear as 12
+
+explore %>%
+  filter(freq_cutoff == 10 & k == 3 & iter == 1000) %>%
+  pull(top_terms) %>%
+  pluck(1, "all_terms")
+```
+
+Et voilà, you can see that now we have reduced the number of terms, there is nicer white space between the bars and the text isn't so squished. 
+
+2) We can also use the `SegmentR::explore_LDAs` function to force the plot to appear in one row (rather than faceting the plot into two rows of charts, as it is currently doing). Again, this is controlled by the argument `nrow` and we can set this to be equal to `1`:
+
+```{r}
+explore <- ldas %>%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE,
+                         nrow = 1) #Set the number of rows to be 1
+
+explore %>%
+  filter(freq_cutoff == 10 & k == 3 & iter == 1000) %>%
+  pull(top_terms) %>%
+  pluck(1, "all_terms")
+```
+
+As we are not forcing the plots on two rows, the stretch out vertically a bit more now, but certainly do not seem as squashed in this dimension any more.
+
+3) Finally, we can edit the size of the text in question specifically. In contrast to the previous two solutions, we do not do this via the `SegmentR::explore_LDAs` function, but rather explicitly set this when pulling the plot from the `explore` object. We do this by providing the `ggplot2` function `theme()` to our code. Within `theme()` we can specify the argument `axis.text.y` to be equal to `element_text(size = 8)`. Play around with this size (larger numbers = larger text) until you are happy. Note that this can also be used to specify the size of the x axis text with the argument `axis.text.y`. As always though, if you end up changing the size of the axis text in one plot, be considerate as to whether other plots also need to be changed for consistency. 
+
+
+```{r}
+explore <- ldas %>%
+  SegmentR::explore_LDAs(top_terms = TRUE,
+                         diff_terms = TRUE,
+                         bigrams = TRUE,
+                         exemplars = TRUE)
+
+explore %>%
+  filter(freq_cutoff == 10 & k == 3 & iter == 1000) %>%
+  pull(top_terms) %>%
+  pluck(1, "all_terms") +
+  theme(axis.text.y = element_text(size = 8)) #Use the theme function to specify the size of the y axis text
+```
+
+And there you go, these are some potential solutions to helping clean up some plots that have been made in SegmentR. Note that these are not mutually exclusive, and we can combine these solutions together (for example displaying 12 terms, on one row, with a smaller font size) if we so wish. 

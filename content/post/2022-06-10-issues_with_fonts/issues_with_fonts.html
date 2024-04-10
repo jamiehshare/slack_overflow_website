@@ -21,9 +21,9 @@ output:
 <h2>The Problem</h2>
 <p>When trying to plot a visualisation (e.g., bigrams), you are greeted with the following error message:</p>
 <center>
-<div class="figure">
-<img src="/error_message.png" style="width:70.0%" alt="" />
-<p class="caption"><em>Type of error message we may see</em></p>
+<div class="float">
+<img src="/error_message.png" style="width:70.0%" alt="Type of error message we may see" />
+<div class="figcaption"><em>Type of error message we may see</em></div>
 </div>
 </center>
 <p>This is an issue with R being unable to find the appropriate fonts to produce our plot.</p>
@@ -37,12 +37,12 @@ output:
 - “Neue Haas Grotesk Text Pro 75 Bold”.</p>
 <p>We can check this by opening our Font Book application on our Macs. To do this, press ⌘ + space and type “Font Book”, and it should appear. We can then double check that these fonts appear:</p>
 <center>
-<div class="figure">
-<img src="/font_screenshot.png" alt="" />
-<p class="caption"><em>List of fonts as they appear in Font Book</em></p>
+<div class="float">
+<img src="/font_screenshot.png" alt="List of fonts as they appear in Font Book" />
+<div class="figcaption"><em>List of fonts as they appear in Font Book</em></div>
 </div>
 </center>
-<p>If we do not have these fonts, they can be downloaded from <a href="">enter link here</a>.</p>
+<p>If we do not have these fonts, they can be downloaded from <a href="https://drive.google.com/drive/folders/1UUKi8x_-DrecfDNZYmjSKRAqvxCzVGYY">here</a>.</p>
 <p>Now, we can run the following code in R to rebook our fonts and make sure all our system fonts (from Font Book) are imported into R.</p>
 <pre class="r"><code>library(extrafont)
 font_import()

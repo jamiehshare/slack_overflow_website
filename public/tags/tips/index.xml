@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>tips on Slack Overflow tips &amp; tricks</title>
+    <link>https://slack-overflow-help.netlify.app/tags/tips/</link>
+    <description>Recent content in tips on Slack Overflow tips &amp; tricks</description>
+    <image>
+      <url>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 28 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://slack-overflow-help.netlify.app/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Creating Snippets</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/</link>
+      <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/</guid>
+      <description>Topic originally suggested by Jack Penzer, Data Scientist The Problem As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.
+What are Code Snippets? Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>fonts on Slack Overflow tips &amp; tricks</title>
+    <link>https://slack-overflow-help.netlify.app/tags/fonts/</link>
+    <description>Recent content in fonts on Slack Overflow tips &amp; tricks</description>
+    <image>
+      <url>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Fri, 10 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://slack-overflow-help.netlify.app/tags/fonts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Issues with fonts</title>
+      <link>https://slack-overflow-help.netlify.app/post/2022-06-10-issues_with_fonts/issues_with_fonts/</link>
+      <pubDate>Fri, 10 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2022-06-10-issues_with_fonts/issues_with_fonts/</guid>
+      <description>Answer originally provided by Jack Penzer, Data Scientist The Problem When trying to plot a visualisation (e.g., bigrams), you are greeted with the following error message:
+Type of error message we may see
+This is an issue with R being unable to find the appropriate fonts to produce our plot.
+The Solution- reinstall fonts and restart R session. We need to make sure we have the correct fonts installed on our computers, and also imported into R.</description>
+    </item>
+    
+  </channel>
+</rss>

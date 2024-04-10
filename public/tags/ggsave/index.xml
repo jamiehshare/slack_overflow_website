@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>ggsave on Slack Overflow tips &amp; tricks</title>
+    <link>https://slack-overflow-help.netlify.app/tags/ggsave/</link>
+    <description>Recent content in ggsave on Slack Overflow tips &amp; tricks</description>
+    <image>
+      <url>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Tue, 14 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://slack-overflow-help.netlify.app/tags/ggsave/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Change text size of SegmentR plots</title>
+      <link>https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/</link>
+      <pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2023-01-14-segmentr-plots/segmentr_plots/</guid>
+      <description>Answer originally suggested by Jack Penzer, Senior Data Scientist The Problem Sometimes, the plots produced by packages such as SegmentR appear squished with not much white space surrounding the axis text (i.e. the terms for each topic).
+Let’s use the example ‘Top Terms’ plot from the SegmentR documentation to see what this means. We start by quickly running through a very simple topic modelling workflow (NB we are not trying different values of min_freq, k_opts etc here because this is just for demonstration- we must try different values for project work)</description>
+    </item>
+    
+    <item>
+      <title>Consistently Save Plots</title>
+      <link>https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/</link>
+      <pubDate>Tue, 14 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://slack-overflow-help.netlify.app/post/2023-01-13-ggsave/ggsave/</guid>
+      <description>Answers originally suggested by Jamie Hudson, Data Scientist and Jack Penzer, Senior Data Scientist The Problem It is important to be able to export/save the figures created in R in a consistent manner, so that throughout a deck all plots of a similar type (e.g. all bigrams) are the same size and resolution.
+If plots are saved using the Plots panel by clicking Export and Save as image, it is very easy to accidentally save plots as different sizes (and you cannot alter the resolution from the default value).</description>
+    </item>
+    
+  </channel>
+</rss>

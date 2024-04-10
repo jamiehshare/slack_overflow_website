@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Creating Snippets | Slack Overflow tips &amp; tricks</title>
+<meta name="keywords" content="snippet, tips">
+<meta name="description" content="Topic originally suggested by Jack Penzer, Data Scientist The Problem As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.
+What are Code Snippets? Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency.">
+<meta name="author" content="Jamie Hudson, Data Scientist">
+<link rel="canonical" href="https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-233404530-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-233404530-1');
+</script>
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f5cd59ea56957c99ecadcf027c42b755eddc79842563adbc375b7fcbc8a04dd8.css" integrity="sha256-9c1Z6laVfJnsrc8CfEK3Ve3ceYQlY628N1t/y8igTdg=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://slack-overflow-help.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://slack-overflow-help.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://slack-overflow-help.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://slack-overflow-help.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://slack-overflow-help.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-233404530-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script><meta property="og:title" content="Creating Snippets" />
+<meta property="og:description" content="Topic originally suggested by Jack Penzer, Data Scientist The Problem As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.
+What are Code Snippets? Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/" /><meta property="og:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-28T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-06-28T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/>
+
+<meta name="twitter:title" content="Creating Snippets"/>
+<meta name="twitter:description" content="Topic originally suggested by Jack Penzer, Data Scientist The Problem As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.
+What are Code Snippets? Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://slack-overflow-help.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Creating Snippets",
+      "item": "https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Creating Snippets",
+  "name": "Creating Snippets",
+  "description": "Topic originally suggested by Jack Penzer, Data Scientist The Problem As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.\nWhat are Code Snippets? Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency.",
+  "keywords": [
+    "snippet", "tips"
+  ],
+  "articleBody": " Topic originally suggested by Jack Penzer, Data Scientist The Problem As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.\nWhat are Code Snippets? Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency.\nExample 1 - load Share packages As a first example, we will create a code snippet that quickly enables us to insert the text that enables us to load all the Share R packages.\nObviously, this can be edited to packages that you know you use more often (e.g. perhaps tidyverse rather than ConnectR)\nGo to Tools \u003e Global Options \u003e Code (or ⌘ , and then Code) Make sure Enable code snippets is ticked. Click on Edit Snippets… Now scroll to the bottom of the snippet editor and paste the following code: snippet share_libs library(ParseR) library(SegmentR) library(HelpR) library(ConnectR) Note that each line after the snippet line needs to start with a tab.\nNow click Save and Ok to exit the preferences window We are now able to use our snippet. In our R script, RMarkdown document, or console, type in share_libs and enter tab. Our libraries should now appear, and we can run this code as normal to load the libraries.\nExample 2 - formatting R script Another useful example of snippets is to produce a template R script that one can always use when starting a project.\nFor example, it is good practice for R scripts to start with the following information:\nTitle Author Date Date source followed by other sections we know we use in every script, such as loading libraries, reading in data, and cleaning data.\nThis is what we want our snippet to end up looking like:\n# Title: # Author: # Date created: # load libraries ---------------------------------------------------------- # read in data ------------------------------------------------------------ # clean data -------------------------------------------------------------- 💡Note that the # load libraries ----- is what is known as a “code section”. These sections allow us to break large scripts into discrete regions for easy navigation. These sections are foldable, meaning they have a little arrow next to the line number on the left-hand side of our script, which allows us to collapse this section to make it easy on the eye, if needed. We can insert these sections by pressing ⌘ + Shift + R, and then typing in your label heading.\nNow, back to the creation of the snippet. We could copy and paste the above into the snippet editor as before- however, then we would have to manually select next to “Title:” and type our title, then select next to “Author:” and type our name etc. As R is brilliant, it can help with this (remember, we like to automate as many things as people), but must do a little bit of work now to facilitate this.\nFor any section we want to be able to edit quickly, we add the following code:\n${1:NAME_OF_TEXT}\nChanging the number 1 to be the order this appears in the snippet (i.e. in our example 1 = Title, 2 = Author, etc), and NAME_OF_TEXT to be the general name of the bit of information we are coding for (i.e., Title, Name, etc).\nTherefore, our code snippet that we copy and paste into the snippet editor would be:\nsnippet share_script # Title: ${1:Title} # Author: ${2:Name} # Date created: `r Sys.Date()` # load libraries ---------------------------------------------------------- # read in data ------------------------------------------------------------ # clean data -------------------------------------------------------------- 🚨 Note that for some reason with the way the code above appears on the Slack Overflow website, when you copy and paste it into the snippet editor, you will see red boxes to the side of the hashtags. This is because it thinks we have more than one tab before each line. To fix this, just make sure there is only one tab per line as mentioned before, and the red boxes will disappear. 🚨 Also, the code 2022-06-30 automatically completes today’s date for us based on our computers settings.\nNow we should be able to type share_script in a blank R script, and it will automatically population with a nice template. The curser will automatically highlight the Title, so we can just type our title, press tab, and then it will automatically highlight Name, where we can type our Name, and press tab again.\nWe can even combine these two examples so that the R script template automatically includes certain packages in the load libraries sections.\nHappy snippet creating!\n",
+  "wordCount" : "773",
+  "inLanguage": "en",
+  "datePublished": "2022-06-28T00:00:00Z",
+  "dateModified": "2022-06-28T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Jamie Hudson, Data Scientist"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://slack-overflow-help.netlify.app/post/2022-06-27-creating_snippets/creating_snippets/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Slack Overflow tips \u0026 tricks",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://slack-overflow-help.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://slack-overflow-help.netlify.app/" accesskey="h" title="Slack Overflow (Alt + H)">
+                <img src="https://slack-overflow-help.netlify.app/logo.png" alt="logo" aria-label="logo"
+                    height="50">Slack Overflow</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/share_packages/" title="SHARE package docs">
+                    <span>SHARE package docs</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/categories/" title="R packages">
+                    <span>R packages</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://sharecreative.slack.com/archives/C03FEC4C33N" title="slack_overflow">
+                    <span>slack_overflow</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://slack-overflow-help.netlify.app/">Home</a>&nbsp;»&nbsp;<a href="https://slack-overflow-help.netlify.app/post/">Posts</a></div>
+    <h1 class="post-title">
+      Creating Snippets
+    </h1>
+    <div class="post-meta"><span title='2022-06-28 00:00:00 +0000 UTC'>June 28, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;773 words&nbsp;·&nbsp;Jamie Hudson, Data Scientist
+
+</div>
+  </header> 
+  <div class="post-content">
+
+
+<div id="topic-originally-suggested-by-jack-penzer-data-scientist" class="section level4">
+<h4><em>Topic originally suggested by Jack Penzer, Data Scientist</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>As bona fide coders we love efficiency, consistency, and reproducibility. In the same way functions enable us to automate common tasks within R in a more reliable way than copy-and-pasting, Code Snippets enable us to quickly insert snippets of code.</p>
+</div>
+<div id="what-are-code-snippets" class="section level2">
+<h2>What are Code Snippets?</h2>
+<p>Code snippets are templates of small regions of re-usable code, that enable us to enter repeating code patterns easily with consistency.</p>
+</div>
+<div id="example-1---load-share-packages" class="section level2">
+<h2>Example 1 - load Share packages</h2>
+<p>As a first example, we will create a code snippet that quickly enables us to insert the text that enables us to load all the Share R packages.</p>
+<p><em>Obviously, this can be edited to packages that you know you use more often (e.g. perhaps <code>tidyverse</code> rather than <code>ConnectR</code>)</em></p>
+<ul>
+<li>Go to <em>Tools</em> &gt; <em>Global Options</em> &gt; <em>Code</em> (or ⌘ , and then <em>Code</em>)</li>
+<li>Make sure <em>Enable code snippets</em> is ticked.</li>
+<li>Click on <em>Edit Snippets…</em></li>
+</ul>
+<center>
+<img src="/snippets.png" style="width:70.0%" />
+</center>
+<ul>
+<li>Now scroll to the bottom of the snippet editor and paste the following code:</li>
+</ul>
+<pre class="r"><code>snippet share_libs
+  library(ParseR)
+  library(SegmentR)
+  library(HelpR)
+  library(ConnectR)</code></pre>
+<p><em>Note that each line after the <code>snippet</code> line needs to start with a tab.</em></p>
+<ul>
+<li>Now click <em>Save</em> and <em>Ok</em> to exit the preferences window</li>
+</ul>
+<p>We are now able to use our snippet. In our R script, RMarkdown document, or console, type in <code>share_libs</code> and enter tab. Our libraries should now appear, and we can run this code as normal to load the libraries.</p>
+</div>
+<div id="example-2---formatting-r-script" class="section level2">
+<h2>Example 2 - formatting R script</h2>
+<p>Another useful example of snippets is to produce a template R script that one can always use when starting a project.</p>
+<p>For example, it is good practice for R scripts to start with the following information:</p>
+<ul>
+<li>Title</li>
+<li>Author</li>
+<li>Date</li>
+<li>Date source</li>
+</ul>
+<p>followed by other sections we know we use in every script, such as loading libraries, reading in data, and cleaning data.</p>
+<p>This is what we want our snippet to end up looking like:</p>
+<pre class="r"><code># Title: 
+# Author: 
+# Date created: 
+
+# load libraries ----------------------------------------------------------
+
+# read in data ------------------------------------------------------------
+
+# clean data --------------------------------------------------------------</code></pre>
+<p>💡<em>Note that the <code># load libraries -----</code> is what is known as a “code section”. These sections allow us to break large scripts into discrete regions for easy navigation. These sections are foldable, meaning they have a little arrow next to the line number on the left-hand side of our script, which allows us to collapse this section to make it easy on the eye, if needed. We can insert these sections by pressing ⌘ + Shift + R, and then typing in your label heading.</em></p>
+<p>Now, back to the creation of the snippet. We could copy and paste the above into the snippet editor as before- however, then we would have to manually select next to “Title:” and type our title, then select next to “Author:” and type our name etc. As R is brilliant, it can help with this (remember, we like to automate as many things as people), but must do a little bit of work now to facilitate this.</p>
+<p>For any section we want to be able to edit quickly, we add the following code:</p>
+<p><code>${1:NAME_OF_TEXT}</code></p>
+<p>Changing the number <code>1</code> to be the order this appears in the snippet (i.e. in our example 1 = Title, 2 = Author, etc), and <code>NAME_OF_TEXT</code> to be the general name of the bit of information we are coding for (i.e., Title, Name, etc).</p>
+<p>Therefore, our code snippet that we copy and paste into the snippet editor would be:</p>
+<pre class="r"><code>snippet share_script
+    # Title: ${1:Title}
+    # Author: ${2:Name}
+    # Date created: `r Sys.Date()`
+    
+    # load libraries ----------------------------------------------------------
+
+    # read in data ------------------------------------------------------------
+
+    # clean data --------------------------------------------------------------</code></pre>
+<p>🚨 <em>Note that for some reason with the way the code above appears on the Slack Overflow website, when you copy and paste it into the snippet editor, you will see red boxes to the side of the hashtags. This is because it thinks we have more than one tab before each line. To fix this, just make sure there is only one tab per line as mentioned before, and the red boxes will disappear.</em> 🚨 <em>Also, the code 2022-06-30 automatically completes today’s date for us based on our computers settings.</em></p>
+<p>Now we should be able to type <code>share_script</code> in a blank R script, and it will automatically population with a nice template. The curser will automatically highlight the <code>Title</code>, so we can just type our title, press tab, and then it will automatically highlight <code>Name</code>, where we can type our Name, and press tab again.</p>
+<p>We can even combine these two examples so that the R script template automatically includes certain packages in the <code>load libraries</code> sections.</p>
+<p>Happy snippet creating!</p>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://slack-overflow-help.netlify.app/tags/snippet/">snippet</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/tips/">tips</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://slack-overflow-help.netlify.app/">Slack Overflow tips &amp; tricks</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a><p style="text-align:center"><span style="color:#7f8c8d"><em><span style="font-size:10px">&quot;Dont hate dplyr; hate the game&quot;</span></em></span></p>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

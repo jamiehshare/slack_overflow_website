@@ -45,7 +45,7 @@ We can check this by opening our Font Book application on our Macs. To do this, 
 
 </center>
 
-If we do not have these fonts, they can be downloaded from [enter link here]().
+If we do not have these fonts, they can be downloaded from [here](https://drive.google.com/drive/folders/1UUKi8x_-DrecfDNZYmjSKRAqvxCzVGYY).
 
 Now, we can run the following code in R to rebook our fonts and make sure all  our system fonts (from Font Book) are imported into R.
 

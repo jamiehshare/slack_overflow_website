@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Updating Packages | Slack Overflow tips &amp; tricks</title>
+<meta name="keywords" content="packages, update, install.packages">
+<meta name="description" content="Topic originally suggested by Mike Tapp, Data Diretor The Problem Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.
+We can update packages in a few ways:
+Using R script If we know a specific package that needs to be updated, we can run the code:
+install.packages(&quot;PACKAGE_NAME&quot;) So for example:
+install.packages(&quot;ggplot2&quot;) Note the quotation marks surrounding the package name">
+<meta name="author" content="Jamie Hudson, Data Scientist">
+<link rel="canonical" href="https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-233404530-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-233404530-1');
+</script>
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f5cd59ea56957c99ecadcf027c42b755eddc79842563adbc375b7fcbc8a04dd8.css" integrity="sha256-9c1Z6laVfJnsrc8CfEK3Ve3ceYQlY628N1t/y8igTdg=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://slack-overflow-help.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://slack-overflow-help.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://slack-overflow-help.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://slack-overflow-help.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://slack-overflow-help.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-233404530-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script><meta property="og:title" content="Updating Packages" />
+<meta property="og:description" content="Topic originally suggested by Mike Tapp, Data Diretor The Problem Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.
+We can update packages in a few ways:
+Using R script If we know a specific package that needs to be updated, we can run the code:
+install.packages(&quot;PACKAGE_NAME&quot;) So for example:
+install.packages(&quot;ggplot2&quot;) Note the quotation marks surrounding the package name" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/" /><meta property="og:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-28T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-06-28T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/>
+
+<meta name="twitter:title" content="Updating Packages"/>
+<meta name="twitter:description" content="Topic originally suggested by Mike Tapp, Data Diretor The Problem Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.
+We can update packages in a few ways:
+Using R script If we know a specific package that needs to be updated, we can run the code:
+install.packages(&quot;PACKAGE_NAME&quot;) So for example:
+install.packages(&quot;ggplot2&quot;) Note the quotation marks surrounding the package name"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://slack-overflow-help.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Updating Packages",
+      "item": "https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Updating Packages",
+  "name": "Updating Packages",
+  "description": "Topic originally suggested by Mike Tapp, Data Diretor The Problem Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.\nWe can update packages in a few ways:\nUsing R script If we know a specific package that needs to be updated, we can run the code:\ninstall.packages(\u0026quot;PACKAGE_NAME\u0026quot;) So for example:\ninstall.packages(\u0026quot;ggplot2\u0026quot;) Note the quotation marks surrounding the package name",
+  "keywords": [
+    "packages", "update", "install.packages"
+  ],
+  "articleBody": " Topic originally suggested by Mike Tapp, Data Diretor The Problem Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.\nWe can update packages in a few ways:\nUsing R script If we know a specific package that needs to be updated, we can run the code:\ninstall.packages(\"PACKAGE_NAME\") So for example:\ninstall.packages(\"ggplot2\") Note the quotation marks surrounding the package name\nUsing the R Package Manager An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right-hand corner), there is an “Update” button, which you can click to give you a list of packages that are ready to be updated.\nFrom there, we can click “Select All” and click “Install Updates”.\nWe will then normally be told that R will be restarted during this process. This is normally okay, and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe.\nTo update Share packages To update the Share packages we can’t use the Packages pane (as they are hosted privately for us). Therefore, to update these packages as and when required (The DS team will put out a message advising updating when appropriate), we run the same code we originally used to install them in the first place.\ndevtools::install_github(repo = \"Avery-Island/ParseR\", auth_token = \"let_me_in_please\", force = TRUE) devtools::install_github(repo = \"Avery-Island/SegmentR\", auth_token = \"let_me_in_please\", force = TRUE) devtools::install_github(repo = \"Avery-Island/ConnectR\", auth_token = \"let_me_in_please\", force = TRUE) devtools::install_github(repo = \"Avery-Island/HelpR\", auth_token = \"let_me_in_please\", force = TRUE) Here we just need to make sure we change the auth_token = \"let_me_in_please\" line to an authentication token that you can get from Mike.\n🚨As an aside, once a package has been installed once (through install.packages(\"PACKAGE_NAME\"), we do not need to install it again. It is saved in a directory called “library” in our R environment. Therefore to use these packages in future R sessions, we only need to load them using library(PACKAGE_NAME)🚨\n",
+  "wordCount" : "343",
+  "inLanguage": "en",
+  "datePublished": "2022-06-28T00:00:00Z",
+  "dateModified": "2022-06-28T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Jamie Hudson, Data Scientist"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://slack-overflow-help.netlify.app/post/2022-06-28-update-packages/update_packages/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Slack Overflow tips \u0026 tricks",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://slack-overflow-help.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://slack-overflow-help.netlify.app/" accesskey="h" title="Slack Overflow (Alt + H)">
+                <img src="https://slack-overflow-help.netlify.app/logo.png" alt="logo" aria-label="logo"
+                    height="50">Slack Overflow</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/share_packages/" title="SHARE package docs">
+                    <span>SHARE package docs</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/categories/" title="R packages">
+                    <span>R packages</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://sharecreative.slack.com/archives/C03FEC4C33N" title="slack_overflow">
+                    <span>slack_overflow</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://slack-overflow-help.netlify.app/">Home</a>&nbsp;»&nbsp;<a href="https://slack-overflow-help.netlify.app/post/">Posts</a></div>
+    <h1 class="post-title">
+      Updating Packages
+    </h1>
+    <div class="post-meta"><span title='2022-06-28 00:00:00 +0000 UTC'>June 28, 2022</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;343 words&nbsp;·&nbsp;Jamie Hudson, Data Scientist
+
+</div>
+  </header> 
+  <div class="post-content">
+
+
+<div id="topic-originally-suggested-by-mike-tapp-data-diretor" class="section level4">
+<h4><em>Topic originally suggested by Mike Tapp, Data Diretor</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The Problem</h2>
+<p>Sometimes we need to update our packages, perhaps new functions have been added, patches have been included to fix bugs.</p>
+<p>We can update packages in a few ways:</p>
+</div>
+<div id="using-r-script" class="section level2">
+<h2>Using R script</h2>
+<p>If we know a specific package that needs to be updated, we can run the code:</p>
+<pre class="r"><code>install.packages(&quot;PACKAGE_NAME&quot;)</code></pre>
+<p>So for example:</p>
+<pre class="r"><code>install.packages(&quot;ggplot2&quot;)</code></pre>
+<p><em>Note the quotation marks surrounding the package name</em></p>
+</div>
+<div id="using-the-r-package-manager" class="section level2">
+<h2>Using the R Package Manager</h2>
+<p>An easier way to update multiple packages is through the Packages window of R Studio (which by default is in the bottom right-hand corner), there is an “<em>Update</em>” button, which you can click to give you a list of packages that are ready to be updated.</p>
+<center>
+<img src="/update_packages.png" style="width:70.0%" />
+</center>
+<p>From there, we can click “<em>Select All</em>” and click “<em>Install Updates</em>”.</p>
+<center>
+<img src="/update_packages_2.png" style="width:70.0%" />
+</center>
+<p>We will then normally be told that R will be restarted during this process. This is <strong><em>normally</em></strong> okay, and R should save everything you are working on- but just in case I would recommend making sure you have everything saved yourself- to be safe.</p>
+</div>
+<div id="to-update-share-packages" class="section level2">
+<h2>To update Share packages</h2>
+<p>To update the Share packages we can’t use the Packages pane (as they are hosted privately for us). Therefore, to update these packages as and when required (<em>The DS team will put out a message advising updating when appropriate</em>), we run the same code we originally used to install them in the first place.</p>
+<pre class="r"><code>devtools::install_github(repo = &quot;Avery-Island/ParseR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)
+
+devtools::install_github(repo = &quot;Avery-Island/SegmentR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)
+
+devtools::install_github(repo = &quot;Avery-Island/ConnectR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)
+
+devtools::install_github(repo = &quot;Avery-Island/HelpR&quot;,
+                         auth_token = &quot;let_me_in_please&quot;,
+                         force = TRUE)</code></pre>
+<p>Here we just need to make sure we change the <code>auth_token = "let_me_in_please"</code> line to an authentication token that you can get from Mike.</p>
+<p>🚨As an aside, once a package has been installed once (through <code>install.packages("PACKAGE_NAME")</code>, we do not need to install it again. It is saved in a directory called “library” in our R environment. Therefore to use these packages in future R sessions, we only need to load them using <code>library(PACKAGE_NAME)</code>🚨</p>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://slack-overflow-help.netlify.app/tags/packages/">packages</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/update/">update</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/install.packages/">install.packages</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://slack-overflow-help.netlify.app/">Slack Overflow tips &amp; tricks</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a><p style="text-align:center"><span style="color:#7f8c8d"><em><span style="font-size:10px">&quot;Dont hate dplyr; hate the game&quot;</span></em></span></p>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>

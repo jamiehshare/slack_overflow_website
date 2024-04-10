@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Extracting and filtering for subreddits | Slack Overflow tips &amp; tricks</title>
+<meta name="keywords" content="extract, filtering, reddit">
+<meta name="description" content="Topic originally suggested by Jack Penzer, Data Scientist The problem Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.
+For this tutorial, let’s say we have a dataset in R called data, that looks like the following:
+head(data) ## # A tibble: 6 × 14 ## project_id date author mention_content ave_sentiment sentiment ## &lt;int&gt; &lt;date&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; ## 1 1 2022-04-27 Instagram User love airpods co… 0.">
+<meta name="author" content="Jamie Hudson, Data Scientist">
+<link rel="canonical" href="https://slack-overflow-help.netlify.app/post/2022-06-10-subreddit_extraction/subreddit_extraction/">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-233404530-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-233404530-1');
+</script>
+<link crossorigin="anonymous" href="/assets/css/stylesheet.f5cd59ea56957c99ecadcf027c42b755eddc79842563adbc375b7fcbc8a04dd8.css" integrity="sha256-9c1Z6laVfJnsrc8CfEK3Ve3ceYQlY628N1t/y8igTdg=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://slack-overflow-help.netlify.app/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://slack-overflow-help.netlify.app/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://slack-overflow-help.netlify.app/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://slack-overflow-help.netlify.app/apple-touch-icon.png">
+<link rel="mask-icon" href="https://slack-overflow-help.netlify.app/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-233404530-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script><meta property="og:title" content="Extracting and filtering for subreddits" />
+<meta property="og:description" content="Topic originally suggested by Jack Penzer, Data Scientist The problem Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.
+For this tutorial, let’s say we have a dataset in R called data, that looks like the following:
+head(data) ## # A tibble: 6 × 14 ## project_id date author mention_content ave_sentiment sentiment ## &lt;int&gt; &lt;date&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; ## 1 1 2022-04-27 Instagram User love airpods co… 0." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://slack-overflow-help.netlify.app/post/2022-06-10-subreddit_extraction/subreddit_extraction/" /><meta property="og:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-06-10T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2022-06-10T00:00:00&#43;00:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://slack-overflow-help.netlify.app/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"/>
+
+<meta name="twitter:title" content="Extracting and filtering for subreddits"/>
+<meta name="twitter:description" content="Topic originally suggested by Jack Penzer, Data Scientist The problem Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.
+For this tutorial, let’s say we have a dataset in R called data, that looks like the following:
+head(data) ## # A tibble: 6 × 14 ## project_id date author mention_content ave_sentiment sentiment ## &lt;int&gt; &lt;date&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; ## 1 1 2022-04-27 Instagram User love airpods co… 0."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://slack-overflow-help.netlify.app/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Extracting and filtering for subreddits",
+      "item": "https://slack-overflow-help.netlify.app/post/2022-06-10-subreddit_extraction/subreddit_extraction/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Extracting and filtering for subreddits",
+  "name": "Extracting and filtering for subreddits",
+  "description": "Topic originally suggested by Jack Penzer, Data Scientist The problem Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.\nFor this tutorial, let’s say we have a dataset in R called data, that looks like the following:\nhead(data) ## # A tibble: 6 × 14 ## project_id date author mention_content ave_sentiment sentiment ## \u0026lt;int\u0026gt; \u0026lt;date\u0026gt; \u0026lt;chr\u0026gt; \u0026lt;chr\u0026gt; \u0026lt;dbl\u0026gt; \u0026lt;chr\u0026gt; ## 1 1 2022-04-27 Instagram User love airpods co… 0.",
+  "keywords": [
+    "extract", "filtering", "reddit"
+  ],
+  "articleBody": " Topic originally suggested by Jack Penzer, Data Scientist The problem Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.\nFor this tutorial, let’s say we have a dataset in R called data, that looks like the following:\nhead(data) ## # A tibble: 6 × 14 ## project_id date author mention_content ave_sentiment sentiment ## ## 1 1 2022-04-27 Instagram User love airpods co… 0.287 POSITIVE ## 2 2 2022-04-10 MrSlowestD16 support apple d… 0.294 POSITIVE ## 3 3 2022-04-06 SkyRiseElite101 absolutely bril… 0.358 POSITIVE ## 4 4 2022-04-10 Scott76655335 amazon comau ro… 0.399 POSITIVE ## 5 5 2022-04-27 rmo777 love google 0.236 POSITIVE ## 6 6 2022-04-28 vigilantebff pretty good hig… 0.366 POSITIVE ## # … with 8 more variables: mention_url , string_length , ## # word_count , sd , text_copy , apple , amazon , ## # amend_id Solution Let’s load in the required packages first:\nlibrary(dplyr) library(ParseR) library(stringr) library(purrr) To do this, firstly we extract the text variable (in this case mention_content) and the URL column (mention_url), using the dplyr::select() function and store these in a new data frame.\ncompare_subreddits \u003c- data %\u003e% dplyr::select(mention_content, mention_url) head(compare_subreddits) ## # A tibble: 6 × 2 ## mention_content mention_url ## ## 1 love airpods convenient biggest unlike generations case recharges… https://ww… ## 2 support apple decision support vulkan developer write graphics dr… https://ww… ## 3 absolutely brilliant amd intel finally start trade blows hit lowe… https://ww… ## 4 amazon comau robotics system building cars im pretty tesla https://tw… ## 5 love google https://tw… ## 6 pretty good highly recommend loved freddie hp bridgerton https://tw… The next step is to write a RegEx pattern that extracts the name of the subreddits from our mention_url column (in the form of ‘/r/subreddit’), using stringr::str_extract. These named subreddits are placed in a new column called subreddits using dplyr::mutate. Finally for this step, we filter out the rows where the subreddits column is NA (i.e. there was no subreddit found within the mention_url column) using dplyr::filter().\ncompare_subreddits \u003c- compare_subreddits %\u003e% dplyr::mutate(subreddits = stringr::str_extract(mention_url, \"/r/\\\\w+/\"))%\u003e% dplyr::filter(!is.na(subreddits)) head(compare_subreddits) ## # A tibble: 6 × 3 ## mention_content mention_url subreddits ## ## 1 install linux ubuntu popos dual boot convince things e… https://ww… /r/thinkp… ## 2 nato buy titanium band amazon ll love titanium band fi… https://ww… /r/OmegaW… ## 3 found facebook love nanny degree ece previously worked… https://ww… /r/bayare… ## 4 cooling blankets shiny striped bamboo amazon shiny wor… https://ww… /r/Menopa… ## 5 amazon approved exception return product year late tho… https://ww… /r/boardg… ## 6 mount sigma mm f extremely sharp favorite shot sony ap… https://ww… /r/fujifi… Now we can start to do whatever analysis is required, for example we could count the number of posts from each subreddit in our data frame using dplyr::count()…\ncompare_subreddits %\u003e% dplyr::count(subreddits, sort = TRUE) ## # A tibble: 9,279 × 2 ## subreddits n ## ## 1 /r/apple/ 956 ## 2 /r/pcmasterrace/ 841 ## 3 /r/mac/ 671 ## 4 /r/AskReddit/ 623 ## 5 /r/ipad/ 621 ## 6 /r/macbookpro/ 546 ## 7 /r/linuxmasterrace/ 531 ## 8 /r/thinkpad/ 475 ## 9 /r/buildapc/ 457 ## 10 /r/linux_gaming/ 438 ## # … with 9,269 more rows … or we might want to filter out unwanted posts from questionable subreddits (such as /r/wallstreetbets) using dplyr::filter…\ncompare_subreddits %\u003e% dplyr::filter(!subreddits == \"/r/wallstreetbets/\") ## # A tibble: 59,361 × 3 ## mention_content mention_url subreddits ## ## 1 install linux ubuntu popos dual boot convince things … https://ww… /r/thinkp… ## 2 nato buy titanium band amazon ll love titanium band f… https://ww… /r/OmegaW… ## 3 found facebook love nanny degree ece previously worke… https://ww… /r/bayare… ## 4 cooling blankets shiny striped bamboo amazon shiny wo… https://ww… /r/Menopa… ## 5 amazon approved exception return product year late th… https://ww… /r/boardg… ## 6 mount sigma mm f extremely sharp favorite shot sony a… https://ww… /r/fujifi… ## 7 great running google mesh router google nest hub add … https://ww… /r/homeau… ## 8 wondering copy redhat unlimited updates customer supp… https://ww… /r/linuxm… ## 9 great gmail hangouts easy imo https://ww… /r/Minecr… ## 10 knowledge helios bad good lenovo legion y legion disa… https://ww… /r/Sugges… ## # … with 59,351 more rows … or we might want to perform a WLO to distinctness in conversations between subreddits. Say we want to compare /r/pcmasterrace, /r/mac, and /r/linuxmasterrace/, we can dplyr::filter() for these subreddits within the subreddits column, and pipe (%\u003e%) this into the ParseR::calculate_wlos function, where our topic_var is the subreddits column and our text_var is the mention_content column.\ncompare_subreddits %\u003e% dplyr::filter(subreddits %in% c(\"/r/mac/\",\"/r/pcmasterrace/\", \"/r/linuxmasterrace/\")) %\u003e% ParseR::calculate_wlos(topic_var = subreddits, text_var = mention_content, top_n = 15) %\u003e% purrr::pluck(\"viz\") ",
+  "wordCount" : "790",
+  "inLanguage": "en",
+  "datePublished": "2022-06-10T00:00:00Z",
+  "dateModified": "2022-06-10T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Jamie Hudson, Data Scientist"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://slack-overflow-help.netlify.app/post/2022-06-10-subreddit_extraction/subreddit_extraction/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Slack Overflow tips \u0026 tricks",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://slack-overflow-help.netlify.app/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://slack-overflow-help.netlify.app/" accesskey="h" title="Slack Overflow (Alt + H)">
+                <img src="https://slack-overflow-help.netlify.app/logo.png" alt="logo" aria-label="logo"
+                    height="50">Slack Overflow</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/share_packages/" title="SHARE package docs">
+                    <span>SHARE package docs</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/categories/" title="R packages">
+                    <span>R packages</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://slack-overflow-help.netlify.app/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://sharecreative.slack.com/archives/C03FEC4C33N" title="slack_overflow">
+                    <span>slack_overflow</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://slack-overflow-help.netlify.app/">Home</a>&nbsp;»&nbsp;<a href="https://slack-overflow-help.netlify.app/post/">Posts</a></div>
+    <h1 class="post-title">
+      Extracting and filtering for subreddits
+    </h1>
+    <div class="post-meta"><span title='2022-06-10 00:00:00 +0000 UTC'>June 10, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;790 words&nbsp;·&nbsp;Jamie Hudson, Data Scientist
+
+</div>
+  </header> 
+  <div class="post-content">
+
+
+<div id="topic-originally-suggested-by-jack-penzer-data-scientist" class="section level4">
+<h4><em>Topic originally suggested by Jack Penzer, Data Scientist</em></h4>
+</div>
+<div id="the-problem" class="section level2">
+<h2>The problem</h2>
+<p>Sometimes we might receive data from a social listening output and we want to be able to filter for subreddits of interest.</p>
+<p>For this tutorial, let’s say we have a dataset in R called <code>data</code>, that looks like the following:</p>
+<pre class="r"><code>head(data)</code></pre>
+<pre><code>## # A tibble: 6 × 14
+##   project_id date       author          mention_content  ave_sentiment sentiment
+##        &lt;int&gt; &lt;date&gt;     &lt;chr&gt;           &lt;chr&gt;                    &lt;dbl&gt; &lt;chr&gt;    
+## 1          1 2022-04-27 Instagram User  love airpods co…         0.287 POSITIVE 
+## 2          2 2022-04-10 MrSlowestD16    support apple d…         0.294 POSITIVE 
+## 3          3 2022-04-06 SkyRiseElite101 absolutely bril…         0.358 POSITIVE 
+## 4          4 2022-04-10 Scott76655335   amazon comau ro…         0.399 POSITIVE 
+## 5          5 2022-04-27 rmo777          love google              0.236 POSITIVE 
+## 6          6 2022-04-28 vigilantebff    pretty good hig…         0.366 POSITIVE 
+## # … with 8 more variables: mention_url &lt;chr&gt;, string_length &lt;int&gt;,
+## #   word_count &lt;int&gt;, sd &lt;dbl&gt;, text_copy &lt;chr&gt;, apple &lt;lgl&gt;, amazon &lt;lgl&gt;,
+## #   amend_id &lt;int&gt;</code></pre>
+</div>
+<div id="solution" class="section level2">
+<h2>Solution</h2>
+<p>Let’s load in the required packages first:</p>
+<pre class="r"><code>library(dplyr)
+library(ParseR)
+library(stringr)
+library(purrr)</code></pre>
+<p>To do this, firstly we extract the text variable (in this case <code>mention_content</code>) and the URL column (<code>mention_url</code>), using the <code>dplyr::select()</code> function and store these in a new data frame.</p>
+<pre class="r"><code>compare_subreddits &lt;- data %&gt;%
+    dplyr::select(mention_content, mention_url)
+
+head(compare_subreddits)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   mention_content                                                    mention_url
+##   &lt;chr&gt;                                                              &lt;chr&gt;      
+## 1 love airpods convenient biggest unlike generations case recharges… https://ww…
+## 2 support apple decision support vulkan developer write graphics dr… https://ww…
+## 3 absolutely brilliant amd intel finally start trade blows hit lowe… https://ww…
+## 4 amazon comau robotics system building cars im pretty tesla         https://tw…
+## 5 love google                                                        https://tw…
+## 6 pretty good highly recommend loved freddie hp bridgerton           https://tw…</code></pre>
+<p>The next step is to write a RegEx pattern that extracts the name of the subreddits from our <code>mention_url</code> column (in the form of ‘/r/subreddit’), using <code>stringr::str_extract</code>. These named subreddits are placed in a new column called <code>subreddits</code> using <code>dplyr::mutate</code>. Finally for this step, we filter out the rows where the <code>subreddits</code> column is NA (i.e. there was no subreddit found within the <code>mention_url</code> column) using <code>dplyr::filter()</code>.</p>
+<pre class="r"><code>compare_subreddits &lt;- compare_subreddits %&gt;%
+  dplyr::mutate(subreddits = stringr::str_extract(mention_url, &quot;/r/\\w+/&quot;))%&gt;%
+  dplyr::filter(!is.na(subreddits))
+
+head(compare_subreddits)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   mention_content                                         mention_url subreddits
+##   &lt;chr&gt;                                                   &lt;chr&gt;       &lt;chr&gt;     
+## 1 install linux ubuntu popos dual boot convince things e… https://ww… /r/thinkp…
+## 2 nato buy titanium band amazon ll love titanium band fi… https://ww… /r/OmegaW…
+## 3 found facebook love nanny degree ece previously worked… https://ww… /r/bayare…
+## 4 cooling blankets shiny striped bamboo amazon shiny wor… https://ww… /r/Menopa…
+## 5 amazon approved exception return product year late tho… https://ww… /r/boardg…
+## 6 mount sigma mm f extremely sharp favorite shot sony ap… https://ww… /r/fujifi…</code></pre>
+<p>Now we can start to do whatever analysis is required, for example we could count the number of posts from each subreddit in our data frame using <code>dplyr::count()</code>…</p>
+<pre class="r"><code>compare_subreddits %&gt;%
+  dplyr::count(subreddits, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 9,279 × 2
+##    subreddits              n
+##    &lt;chr&gt;               &lt;int&gt;
+##  1 /r/apple/             956
+##  2 /r/pcmasterrace/      841
+##  3 /r/mac/               671
+##  4 /r/AskReddit/         623
+##  5 /r/ipad/              621
+##  6 /r/macbookpro/        546
+##  7 /r/linuxmasterrace/   531
+##  8 /r/thinkpad/          475
+##  9 /r/buildapc/          457
+## 10 /r/linux_gaming/      438
+## # … with 9,269 more rows</code></pre>
+<p>… or we might want to filter out unwanted posts from questionable subreddits (such as /r/wallstreetbets) using <code>dplyr::filter</code>…</p>
+<pre class="r"><code>compare_subreddits %&gt;%
+  dplyr::filter(!subreddits == &quot;/r/wallstreetbets/&quot;)</code></pre>
+<pre><code>## # A tibble: 59,361 × 3
+##    mention_content                                        mention_url subreddits
+##    &lt;chr&gt;                                                  &lt;chr&gt;       &lt;chr&gt;     
+##  1 install linux ubuntu popos dual boot convince things … https://ww… /r/thinkp…
+##  2 nato buy titanium band amazon ll love titanium band f… https://ww… /r/OmegaW…
+##  3 found facebook love nanny degree ece previously worke… https://ww… /r/bayare…
+##  4 cooling blankets shiny striped bamboo amazon shiny wo… https://ww… /r/Menopa…
+##  5 amazon approved exception return product year late th… https://ww… /r/boardg…
+##  6 mount sigma mm f extremely sharp favorite shot sony a… https://ww… /r/fujifi…
+##  7 great running google mesh router google nest hub add … https://ww… /r/homeau…
+##  8 wondering copy redhat unlimited updates customer supp… https://ww… /r/linuxm…
+##  9 great gmail hangouts easy imo                          https://ww… /r/Minecr…
+## 10 knowledge helios bad good lenovo legion y legion disa… https://ww… /r/Sugges…
+## # … with 59,351 more rows</code></pre>
+<p>… or we might want to perform a WLO to distinctness in conversations between subreddits. Say we want to compare /r/pcmasterrace, /r/mac, and /r/linuxmasterrace/, we can <code>dplyr::filter()</code> for these subreddits within the <code>subreddits</code> column, and pipe (<code>%&gt;%</code>) this into the <code>ParseR::calculate_wlos</code> function, where our <code>topic_var</code> is the <code>subreddits</code> column and our <code>text_var</code> is the <code>mention_content</code> column.</p>
+<pre class="r"><code>compare_subreddits %&gt;%
+  dplyr::filter(subreddits %in% c(&quot;/r/mac/&quot;,&quot;/r/pcmasterrace/&quot;, &quot;/r/linuxmasterrace/&quot;)) %&gt;%
+  ParseR::calculate_wlos(topic_var = subreddits, text_var = mention_content, top_n = 15) %&gt;%
+  purrr::pluck(&quot;viz&quot;)</code></pre>
+<p><img src="/post/2022-06-10-subreddit_extraction/subreddit_extraction_files/figure-html/wlo-1.png" width="672" /></p>
+</div>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://slack-overflow-help.netlify.app/tags/extract/">extract</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/filtering/">filtering</a></li>
+      <li><a href="https://slack-overflow-help.netlify.app/tags/reddit/">reddit</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://slack-overflow-help.netlify.app/">Slack Overflow tips &amp; tricks</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a><p style="text-align:center"><span style="color:#7f8c8d"><em><span style="font-size:10px">&quot;Dont hate dplyr; hate the game&quot;</span></em></span></p>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
